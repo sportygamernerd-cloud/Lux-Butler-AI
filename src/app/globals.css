@@ -1,0 +1,78 @@
+:root {
+  --color-black: #050505;
+  --color-gold: #D4AF37;
+  --color-gold-light: #F1D463;
+  --color-text: #EAEAEA;
+  --font-lux: 'Cinzel', serif;
+  --font-body: 'Lato', sans-serif;
+  --bg-chat: #0a0a0a;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400&display=swap');
+
+body {
+  background-color: var(--color-black);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, .lux-title {
+  font-family: var(--font-lux);
+  color: var(--color-gold);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.lux-button {
+  background: linear-gradient(135deg, var(--color-gold), var(--color-gold-light));
+  color: var(--color-black);
+  border: none;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 2px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: opacity 0.3s;
+}
+
+.lux-button:hover {
+  opacity: 0.9;
+}
+
+.lux-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.lux-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--color-gold);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.chat-bubble-user {
+  background-color: var(--color-gold);
+  color: var(--color-black);
+  padding: 10px;
+  border-radius: 10px 10px 0 10px;
+  margin: 5px 0;
+  align-self: flex-end;
+  max-width: 80%;
+}
+
+.chat-bubble-ai {
+  background-color: #2a2a2a;
+  color: var(--color-text);
+  border: 1px solid var(--color-gold);
+  padding: 10px;
+  border-radius: 10px 10px 10px 0;
+  margin: 5px 0;
+  align-self: flex-start;
+  max-width: 80%;
+}
