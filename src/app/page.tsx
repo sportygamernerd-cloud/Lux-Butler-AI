@@ -39,11 +39,11 @@ export default function LandingPage() {
     const win = window.open("");
     win?.document.write(`<div style="text-align:center; font-family: 'Montserrat', sans-serif; padding: 60px; background: #121212; height: 100vh; color: #EAEAEA;">
       <h1 style="color:#D4AF37; margin-bottom:10px; text-transform:uppercase; letter-spacing:4px;">Lux Butler</h1>
-      <p style="color:#A0A0A0; margin-bottom:40px; font-weight:300;">COMPLIMENTARY CONCIERGE ACCESS</p>
+      <p style="color:#A0A0A0; margin-bottom:40px; font-weight:300;">ACCÈS CONCIERGERIE OFFERT</p>
       <div style="background:#fff; padding:20px; display:inline-block; border-radius:12px;">
          <img src="${qr}" width="300" />
       </div>
-      <p style="margin-top:30px; font-size:0.9rem; color:#555;">Scan to connect instantly</p>
+      <p style="margin-top:30px; font-size:0.9rem; color:#555;">Scannez pour vous connecter instantanément</p>
     </div>`);
   };
 
@@ -57,7 +57,7 @@ export default function LandingPage() {
               LUX<span>BUTLER</span>
             </div>
             <button className="lux-button secondary icon-btn" onClick={() => setShowDashboard(true)}>
-              Owner Login
+              Connexion Hôte
             </button>
           </div>
         </nav>
@@ -65,17 +65,17 @@ export default function LandingPage() {
         {/* Hero Section */}
         <section className="container" style={{padding: '80px 20px', textAlign:'center'}}>
           <h1 style={{fontSize: 'clamp(2.5rem, 5vw, 4rem)', lineHeight: 1.1, marginBottom: '20px', color: '#fff'}}>
-            Elegance is in the <br/><span style={{color: 'var(--color-gold)', fontStyle:'italic'}}>Details</span>
+            L'Élégance est dans les <br/><span style={{color: 'var(--color-gold)', fontStyle:'italic'}}>Détails</span>
           </h1>
           <p style={{fontSize: '1.1rem', color: 'var(--color-text-muted)', maxWidth: '600px', margin: '0 auto 50px', lineHeight:'1.8'}}>
-            The AI Concierge that transforms your rental into a 5-star experience. Use the power of Artificial Intelligence to serve your guests 24/7.
+            Le Concierge IA qui transforme votre location en expérience 5 étoiles. Utilisez la puissance de l'Intelligence Artificielle pour servir vos invités 24/7.
           </p>
           <div style={{display: 'flex', gap: '20px', justifyContent: 'center'}}>
             <button className="lux-button" onClick={() => setShowDashboard(true)}>
-              Start for Free
+              Essai Gratuit
             </button>
             <button className="lux-button secondary">
-              View Sample
+              Voir un Exemple
             </button>
           </div>
         </section>
@@ -84,16 +84,16 @@ export default function LandingPage() {
         <section style={{background: '#1A1A1A', padding: '80px 0', borderTop:'1px solid #333'}}>
           <div className="container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
             <div className="card" style={{borderColor:'#333', background:'#121212'}}>
-              <h3 style={{fontSize: '1.25rem', marginBottom: '1rem', color:'#fff'}}>24/7 Butler</h3>
-              <p style={{color: 'var(--color-text-muted)'}}>Instant, polite responses to every question about WiFi, amenities, and local tips.</p>
+              <h3 style={{fontSize: '1.25rem', marginBottom: '1rem', color:'#fff'}}>Majordome 24/7</h3>
+              <p style={{color: 'var(--color-text-muted)'}}>Réponses instantanées et polies à toutes les questions sur le WiFi, les équipements et les bons plans locaux.</p>
             </div>
             <div className="card" style={{borderColor:'#333', background:'#121212'}}>
-              <h3 style={{fontSize: '1.25rem', marginBottom: '1rem', color:'#fff'}}>Zero App Download</h3>
-              <p style={{color: 'var(--color-text-muted)'}}>Guests simply scan a premium QR code placed in your property to chatting instantly.</p>
+              <h3 style={{fontSize: '1.25rem', marginBottom: '1rem', color:'#fff'}}>Zéro Téléchargement</h3>
+              <p style={{color: 'var(--color-text-muted)'}}>Vos invités scannent simplement un QR code premium placé dans votre propriété pour discuter instantanément.</p>
             </div>
             <div className="card" style={{borderColor:'#333', background:'#121212'}}>
-              <h3 style={{fontSize: '1.25rem', marginBottom: '1rem', color:'#fff'}}>Polyglot Service</h3>
-              <p style={{color: 'var(--color-text-muted)'}}>Fluent in over 50 languages to welcome guests from all over the world.</p>
+              <h3 style={{fontSize: '1.25rem', marginBottom: '1rem', color:'#fff'}}>Service Polyglotte</h3>
+              <p style={{color: 'var(--color-text-muted)'}}>Parfaitement bilingue dans plus de 50 langues pour accueillir des invités du monde entier.</p>
             </div>
           </div>
         </section>
@@ -107,9 +107,9 @@ export default function LandingPage() {
       <nav className="lux-nav">
         <div className="container flex" style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
           <div className="lux-title" style={{fontSize: '1.2rem', fontWeight:'bold'}}>
-            LUX<span>BUTLER</span> <span style={{opacity:0.5, fontSize:'0.7em', color:'#fff', marginLeft:'10px'}}>DASHBOARD</span>
+            LUX<span>BUTLER</span> <span style={{opacity:0.5, fontSize:'0.7em', color:'#fff', marginLeft:'10px'}}>TABLEAU DE BORD</span>
           </div>
-          <button onClick={() => setShowDashboard(false)} style={{color:'#A0A0A0', background:'transparent', border:'none', cursor:'pointer', fontFamily:'var(--font-heading)', textTransform:'uppercase', fontSize:'0.8rem'}}>Logout</button>
+          <button onClick={() => setShowDashboard(false)} style={{color:'#A0A0A0', background:'transparent', border:'none', cursor:'pointer', fontFamily:'var(--font-heading)', textTransform:'uppercase', fontSize:'0.8rem'}}>Déconnexion</button>
         </div>
       </nav>
 
@@ -125,42 +125,42 @@ export default function LandingPage() {
           {/* Add Property Form */}
           <div className="card">
             <h2 style={{fontSize: '1.25rem', marginBottom: '25px', display: 'flex', alignItems: 'center', gap: '10px', color:'#fff'}}>
-              <span style={{color: 'var(--color-gold)'}}>✦</span> New Property
+              <span style={{color: 'var(--color-gold)'}}>✦</span> Nouvelle Propriété
             </h2>
             <form onSubmit={handleSubmit}>
               <div style={{marginBottom: '15px'}}>
-                <label style={{display: 'block', fontSize: '0.8rem', marginBottom: '8px', color:'var(--color-gold)', letterSpacing:'1px', textTransform:'uppercase'}}>Property Name</label>
-                <input className="lux-input" placeholder="e.g. The Golden Villa" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} required />
+                <label style={{display: 'block', fontSize: '0.8rem', marginBottom: '8px', color:'var(--color-gold)', letterSpacing:'1px', textTransform:'uppercase'}}>Nom de la Propriété</label>
+                <input className="lux-input" placeholder="ex: Villa Sérénité" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} required />
               </div>
               
               <div style={{marginBottom: '15px'}}>
-                <label style={{display: 'block', fontSize: '0.8rem', marginBottom: '8px', color:'var(--color-gold)', letterSpacing:'1px', textTransform:'uppercase'}}>WiFi Configuration</label>
+                <label style={{display: 'block', fontSize: '0.8rem', marginBottom: '8px', color:'var(--color-gold)', letterSpacing:'1px', textTransform:'uppercase'}}>Configuration WiFi</label>
                 <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px'}}>
-                  <input className="lux-input" placeholder="SSID" value={formData.wifi_ssid} onChange={e => setFormData({...formData, wifi_ssid: e.target.value})} />
-                  <input className="lux-input" placeholder="Password" value={formData.wifi_password} onChange={e => setFormData({...formData, wifi_password: e.target.value})} />
+                  <input className="lux-input" placeholder="Nom du réseau (SSID)" value={formData.wifi_ssid} onChange={e => setFormData({...formData, wifi_ssid: e.target.value})} />
+                  <input className="lux-input" placeholder="Mot de passe" value={formData.wifi_password} onChange={e => setFormData({...formData, wifi_password: e.target.value})} />
                 </div>
               </div>
 
               <div style={{marginBottom: '15px'}}>
-                <label style={{display: 'block', fontSize: '0.8rem', marginBottom: '8px', color:'var(--color-gold)', letterSpacing:'1px', textTransform:'uppercase'}}>Access Details</label>
-                <textarea className="lux-textarea" rows={2} placeholder="Keybox code, Gate instructions..." value={formData.instructions_entree} onChange={e => setFormData({...formData, instructions_entree: e.target.value})} />
+                <label style={{display: 'block', fontSize: '0.8rem', marginBottom: '8px', color:'var(--color-gold)', letterSpacing:'1px', textTransform:'uppercase'}}>Détails d'Accès</label>
+                <textarea className="lux-textarea" rows={2} placeholder="Code boîte à clés, instructions portail..." value={formData.instructions_entree} onChange={e => setFormData({...formData, instructions_entree: e.target.value})} />
               </div>
 
               <div style={{marginBottom: '25px'}}>
-                <label style={{display: 'block', fontSize: '0.8rem', marginBottom: '8px', color:'var(--color-gold)', letterSpacing:'1px', textTransform:'uppercase'}}>House Compendium</label>
-                <textarea className="lux-textarea" rows={4} placeholder="Pool heating instructions, AC controls, local trash rules..." value={formData.secrets_maison} onChange={e => setFormData({...formData, secrets_maison: e.target.value})} />
+                <label style={{display: 'block', fontSize: '0.8rem', marginBottom: '8px', color:'var(--color-gold)', letterSpacing:'1px', textTransform:'uppercase'}}>Guide de la Maison</label>
+                <textarea className="lux-textarea" rows={4} placeholder="Chauffage piscine, climatisation, gestion des poubelles..." value={formData.secrets_maison} onChange={e => setFormData({...formData, secrets_maison: e.target.value})} />
               </div>
 
-              <button type="submit" className="lux-button" style={{width: '100%'}}>Create Property</button>
+              <button type="submit" className="lux-button" style={{width: '100%'}}>Créer la Propriété</button>
             </form>
           </div>
 
           {/* Properties List */}
           <div>
-            <h2 style={{fontSize: '1.5rem', marginBottom: '25px', color:'#fff'}}>Managed Properties</h2>
+            <h2 style={{fontSize: '1.5rem', marginBottom: '25px', color:'#fff'}}>Propriétés Gérées</h2>
             {properties.length === 0 ? (
               <div style={{textAlign: 'center', padding: '60px', color: '#555', border:'1px dashed #333', borderRadius: '12px'}}>
-                No properties added yet.
+                Aucune propriété ajoutée pour le moment.
               </div>
             ) : (
               <div style={{display: 'grid', gap: '20px'}}>
@@ -168,7 +168,7 @@ export default function LandingPage() {
                   <div key={p.id} className="card" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin:0, padding:'20px 25px'}}>
                     <div>
                       <h3 style={{fontSize: '1.1rem', marginBottom: '5px', color:'#fff'}}>{p.name}</h3>
-                      <p style={{color: '#666', fontSize: '0.8rem', margin:0}}>WiFi: <span style={{color:'#888'}}>{p.wifi_ssid || 'Not set'}</span></p>
+                      <p style={{color: '#666', fontSize: '0.8rem', margin:0}}>WiFi: <span style={{color:'#888'}}>{p.wifi_ssid || 'Non défini'}</span></p>
                     </div>
                     <div>
                        <button 

@@ -27,7 +27,7 @@ export default function Chat() {
       setMessages(prev => [...prev, { role: 'assistant', content: data.reply }]);
     } catch(e) {
       console.error(e);
-      setMessages(prev => [...prev, { role: 'assistant', content: "I apologize, but I am having trouble connecting to the concierge service right now." }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: "Je vous prie de m'excuser, je rencontre des difficultés pour joindre le service de conciergerie actuellement." }]);
     }
     setLoading(false);
   };
@@ -52,7 +52,7 @@ export default function Chat() {
       className="quick-action-btn"
     >
       <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--color-text-main)' }}>{label}</span>
-      <span style={{ fontSize: '0.7rem', color: 'var(--color-gold)', fontStyle:'italic' }}>Tap to ask</span>
+      <span style={{ fontSize: '0.7rem', color: 'var(--color-gold)', fontStyle:'italic' }}>Appuyer pour demander</span>
     </button>
   );
 
@@ -72,7 +72,7 @@ export default function Chat() {
           <h1 style={{ fontSize: '1.2rem', margin: 0, fontWeight: 700, letterSpacing: '2px', color: '#fff' }}>
             LUX<span style={{color: 'var(--color-gold)'}}>BUTLER</span>
           </h1>
-          <p style={{ fontSize: '0.7rem', color: '#666', margin: 0, textTransform:'uppercase', letterSpacing:'1px' }}>Private Concierge</p>
+          <p style={{ fontSize: '0.7rem', color: '#666', margin: 0, textTransform:'uppercase', letterSpacing:'1px' }}>Conciergerie Privée</p>
         </div>
         <div style={{ width: '35px', height: '35px', border: '1px solid var(--color-gold)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <span style={{color: 'var(--color-gold)', fontSize: '0.8rem', fontFamily:'var(--font-heading)'}}>LB</span>
@@ -87,9 +87,9 @@ export default function Chat() {
               width: '70px', height: '70px', border: '1px solid var(--color-gold)', color: 'var(--color-gold)', 
               borderRadius: '50%', margin: '0 auto 20px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.8rem' 
             }}>✦</div>
-            <h2 style={{ fontSize: '1.5rem', color: '#fff', marginBottom: '10px' }}>Welcome</h2>
+            <h2 style={{ fontSize: '1.5rem', color: '#fff', marginBottom: '10px' }}>Bienvenue</h2>
             <p style={{ fontSize: '1rem', color: '#888', maxWidth: '85%', margin: '0 auto', lineHeight:'1.6' }}>
-              I am your dedicated digital butler. <br/>How may I be of service to you today?
+              Je suis votre majordome numérique dédié. <br/>Comment puis-je vous être utile aujourd'hui ?
             </p>
           </div>
         )}
@@ -97,9 +97,9 @@ export default function Chat() {
         {/* Quick Actions Grid */}
         {messages.length < 2 && (
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px', margin: '0 auto', width: '100%' }}>
-            <QuickAction label="WiFi Access" query="What is the WiFi password?" />
-            <QuickAction label="Check-out" query="What are the check-out instructions?" />
-            <QuickAction label="House Rules" query="What are the house rules?" />
+            <QuickAction label="Code WiFi" query="Quel est le mot de passe WiFi ?" />
+            <QuickAction label="Check-out" query="Quelles sont les instructions de départ ?" />
+            <QuickAction label="Règles" query="Quelles sont les règles de la maison ?" />
           </div>
         )}
 
@@ -122,7 +122,7 @@ export default function Chat() {
               {m.content}
             </div>
             {m.role === 'assistant' && (
-              <div style={{ fontSize: '0.65rem', color: '#666', marginTop: '6px', marginLeft: '5px', textTransform:'uppercase', letterSpacing:'1px' }}>Butler</div>
+              <div style={{ fontSize: '0.65rem', color: '#666', marginTop: '6px', marginLeft: '5px', textTransform:'uppercase', letterSpacing:'1px' }}>Majordome</div>
             )}
           </div>
         ))}
@@ -162,7 +162,7 @@ export default function Chat() {
           value={input} 
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && sendMessage()}
-          placeholder="Type your request..."
+          placeholder="Écrivez votre demande..."
         />
         <button 
           onClick={() => sendMessage()}
