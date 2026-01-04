@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
-import { Montserrat, Inter } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
-const montserrat = Montserrat({ subsets: ["latin"], variable: "--font-montserrat" });
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const jakarta = Plus_Jakarta_Sans({ 
+  subsets: ["latin"], 
+  variable: "--font-jakarta",
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: "LuxButler AI",
-  description: "Your Personal Palace Concierge",
+  description: "The AI Concierge for High-End Properties",
 };
 
 export default function RootLayout({
@@ -17,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${montserrat.variable} ${inter.variable}`}>
+      <body className={jakarta.variable}>
         {children}
       </body>
     </html>

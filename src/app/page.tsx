@@ -33,112 +33,90 @@ export default function LandingPage() {
   const generateQR = async (id: string) => {
     const url = `${window.location.origin}/${id}/chat`;
     const qr = await QRCode.toDataURL(url, { 
-      color: { dark: '#121212', light: '#D4AF37' },
-      width: 400
+      color: { dark: '#0A0A0A', light: '#D7BE82' },
+      width: 400,
+      margin: 2
     });
     const win = window.open("");
-    win?.document.write(`<div style="text-align:center; font-family: 'Montserrat', sans-serif; padding: 60px; background: #121212; height: 100vh; color: #EAEAEA;">
-      <h1 style="color:#D4AF37; margin-bottom:10px; text-transform:uppercase; letter-spacing:4px;">Lux Butler</h1>
-      <p style="color:#A0A0A0; margin-bottom:40px; font-weight:300;">ACCÈS CONCIERGERIE OFFERT</p>
-      <div style="background:#fff; padding:20px; display:inline-block; border-radius:12px;">
-         <img src="${qr}" width="300" />
+    win?.document.write(`
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600&display=swap');
+        body { margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; background: #0A0A0A; color: #fff; display: flex; align-items: center; justify-content: center; height: 100vh; text-align: center; }
+        .card { background: #161616; padding: 60px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 50px rgba(0,0,0,0.5); max-width: 500px; }
+        h1 { color: #D7BE82; letter-spacing: -0.02em; margin-bottom: 10px; font-weight: 600; }
+        .qr-box { background: #fff; padding: 20px; border-radius: 16px; margin: 40px auto; display: inline-block; }
+        .btn-link { color: #D7BE82; text-decoration: none; border: 1px solid rgba(215, 190, 130, 0.3); padding: 10px 20px; border-radius: 100px; font-size: 0.9rem; transition: all 0.3s; display: inline-block; margin-top: 20px; }
+      </style>
+      <div class="card">
+        <h1>LUX BUTLER</h1>
+        <p style="color: #A1A1AA;">COMPLIMENTARY CONCIERGE ACCESS</p>
+        <div class="qr-box"><img src="${qr}" width="300" /></div>
+        <p style="color: #EAEAEA; font-size: 1.1rem;">Scan to connect instantly</p>
+        <a href="${url}" target="_blank" class="btn-link">Open Chat Directly</a>
       </div>
-      <p style="margin-top:30px; font-size:0.9rem; color:#555;">Scannez pour vous connecter instantanément</p>
-      <p style="margin-top:20px;">
-        <a href="${url}" target="_blank" style="color:#D4AF37; text-decoration:none; border-bottom:1px solid #D4AF37; padding-bottom:2px;">Ouvrir le chat directement</a>
-      </p>
-    </div>`);
+    `);
   };
 
   if (!showDashboard) {
     return (
       <main className="min-h-screen">
-        {/* Navigation */}
         <nav className="lux-nav">
           <div className="container flex" style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
-            <div className="lux-title" style={{fontSize: '1.5rem', fontWeight:'bold'}}>
-              LUX<span>BUTLER</span>
+            <div style={{fontSize: '1.25rem', fontWeight:'600', letterSpacing: '-0.02em', color: '#fff'}}>
+              Lux<span className="lux-text-gold">Butler</span>
             </div>
-            <button className="lux-button secondary icon-btn" onClick={() => setShowDashboard(true)}>
-              Connexion Hôte
+            <button className="lux-button secondary icon-btn" onClick={() => setShowDashboard(true)} style={{borderRadius: '100px', fontSize: '0.8rem'}}>
+              Owner Login
             </button>
           </div>
         </nav>
 
         {/* Hero Section */}
-        <section className="container" style={{padding: '80px 20px', textAlign:'center'}}>
-          <h1 style={{fontSize: 'clamp(2.5rem, 5vw, 4rem)', lineHeight: 1.1, marginBottom: '20px', color: '#fff'}}>
-            L'Élégance est dans les <br/><span style={{color: 'var(--color-gold)', fontStyle:'italic'}}>Détails</span>
+        <section className="container" style={{padding: '120px 20px', textAlign:'center'}}>
+          <div style={{display: 'inline-block', padding: '6px 16px', background: 'rgba(215, 190, 130, 0.1)', borderRadius: '100px', color: '#D7BE82', fontSize: '0.85rem', marginBottom: '24px', fontWeight: '500'}}>
+             ✨ The Future of Hospitality
+          </div>
+          <h1 style={{fontSize: 'clamp(3rem, 6vw, 5rem)', lineHeight: 1.1, marginBottom: '24px'}}>
+            Concierge AI <br/><span className="lux-text-gold">Reimagined.</span>
           </h1>
-          <p style={{fontSize: '1.1rem', color: 'var(--color-text-muted)', maxWidth: '600px', margin: '0 auto 50px', lineHeight:'1.8'}}>
-            Le Concierge IA qui transforme votre location en expérience 5 étoiles. Utilisez la puissance de l'Intelligence Artificielle pour servir vos invités 24/7.
+          <p style={{fontSize: '1.2rem', color: 'var(--color-text-muted)', maxWidth: '580px', margin: '0 auto 48px', fontWeight: 400}}>
+            Elevate your guest experience with an AI butler that feels human, looks premium, and works 24/7.
           </p>
-          <div style={{display: 'flex', gap: '20px', justifyContent: 'center'}}>
-            <button className="lux-button" onClick={() => setShowDashboard(true)}>
-              Essai Gratuit
-            </button>
-            <button className="lux-button secondary">
-              Voir un Exemple
-            </button>
+          <div style={{display: 'flex', gap: '16px', justifyContent: 'center'}}>
+            <button className="lux-button" onClick={() => setShowDashboard(true)}>Start Free Trial</button>
+            <button className="lux-button secondary">View Live Demo</button>
           </div>
         </section>
 
-        {/* Feature Grid */}
-        <section style={{background: '#1A1A1A', padding: '80px 0', borderTop:'1px solid #333'}}>
-          <div className="container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
-            <div className="card" style={{borderColor:'#333', background:'#121212'}}>
-              <h3 style={{fontSize: '1.25rem', marginBottom: '1rem', color:'#fff'}}>Majordome 24/7</h3>
-              <p style={{color: 'var(--color-text-muted)'}}>Réponses instantanées et polies à toutes les questions sur le WiFi, les équipements et les bons plans locaux.</p>
+        {/* Bento Box Grid */}
+        <section className="container" style={{paddingBottom: '120px'}}>
+          <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '24px'}}>
+            <div className="bento-card" style={{gridColumn: 'span 2'}}>
+              <h3 style={{fontSize: '1.5rem', marginBottom: '12px'}}>24/7 Intelligence</h3>
+              <p style={{color: 'var(--color-text-muted)'}}>Instantly answers questions about WiFi, amenities, and local recommendations without you lifting a finger.</p>
             </div>
-            <div className="card" style={{borderColor:'#333', background:'#121212'}}>
-              <h3 style={{fontSize: '1.25rem', marginBottom: '1rem', color:'#fff'}}>Zéro Téléchargement</h3>
-              <p style={{color: 'var(--color-text-muted)'}}>Vos invités scannent simplement un QR code premium placé dans votre propriété pour discuter instantanément.</p>
+            <div className="bento-card">
+              <h3 style={{fontSize: '1.25rem', marginBottom: '12px'}}>Zero-Download</h3>
+              <p style={{color: 'var(--color-text-muted)'}}>Guests scan a QR code. No apps, no registrations. Just instant luxury service.</p>
             </div>
-            <div className="card" style={{borderColor:'#333', background:'#121212'}}>
-              <h3 style={{fontSize: '1.25rem', marginBottom: '1rem', color:'#fff'}}>Service Polyglotte</h3>
-              <p style={{color: 'var(--color-text-muted)'}}>Parfaitement bilingue dans plus de 50 langues pour accueillir des invités du monde entier.</p>
+            <div className="bento-card">
+              <h3 style={{fontSize: '1.25rem', marginBottom: '12px'}}>Polyglot Core</h3>
+              <p style={{color: 'var(--color-text-muted)'}}>Native-level fluency in 50+ languages. Make every guest feel at home.</p>
             </div>
           </div>
         </section>
 
-        {/* Testimonials Section */}
-        <section className="container" style={{padding: '80px 20px', textAlign: 'center'}}>
-          <h2 className="lux-title" style={{marginBottom: '60px', fontSize: '2rem'}}>
-            Approuvé par les <span style={{color: 'var(--color-gold)'}}>Superhosts</span>
-          </h2>
-          <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '30px'}}>
-            
-            {/* Testimonial 1 */}
-            <div style={{background: '#1E1E1E', padding: '30px', borderRadius: '12px', border: '1px solid #333'}}>
-              <div style={{width: '50px', height: '50px', background: '#333', borderRadius: '50%', margin: '0 auto 20px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', color: 'var(--color-gold)'}}>M</div>
-              <p style={{fontStyle: 'italic', color: '#EAEAEA', marginBottom: '20px', lineHeight: '1.6'}}>
-                "Mes voyageurs ont des réponses instantanées, même à 3h du matin. C'est un gain de temps incroyable."
-              </p>
-              <div style={{color: 'var(--color-gold)', fontSize: '0.9rem', fontWeight: 'bold'}}>Marc</div>
-              <div style={{color: '#888', fontSize: '0.8rem'}}>Hôte à Paris</div>
-            </div>
-
-            {/* Testimonial 2 */}
-            <div style={{background: '#1E1E1E', padding: '30px', borderRadius: '12px', border: '1px solid #333'}}>
-              <div style={{width: '50px', height: '50px', background: '#333', borderRadius: '50%', margin: '0 auto 20px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', color: 'var(--color-gold)'}}>S</div>
-              <p style={{fontStyle: 'italic', color: '#EAEAEA', marginBottom: '20px', lineHeight: '1.6'}}>
-                "Plus besoin de répéter 10 fois le code d'entrée ou le mot de passe wifi. Tout est géré automatiquement."
-              </p>
-              <div style={{color: 'var(--color-gold)', fontSize: '0.9rem', fontWeight: 'bold'}}>Sophie</div>
-              <div style={{color: '#888', fontSize: '0.8rem'}}>Hôte à Lyon</div>
-            </div>
-
-            {/* Testimonial 3 */}
-            <div style={{background: '#1E1E1E', padding: '30px', borderRadius: '12px', border: '1px solid #333'}}>
-              <div style={{width: '50px', height: '50px', background: '#333', borderRadius: '50%', margin: '0 auto 20px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', color: 'var(--color-gold)'}}>T</div>
-              <p style={{fontStyle: 'italic', color: '#EAEAEA', marginBottom: '20px', lineHeight: '1.6'}}>
-                "Le design est magnifique et mes clients adorent la simplicité du QR Code. Un service vraiment premium."
-              </p>
-              <div style={{color: 'var(--color-gold)', fontSize: '0.9rem', fontWeight: 'bold'}}>Thomas</div>
-              <div style={{color: '#888', fontSize: '0.8rem'}}>Hôte à Nice</div>
-            </div>
-
-          </div>
+        {/* Social Proof */}
+        <section style={{borderTop: '1px solid var(--color-border)', padding: '100px 0'}}>
+           <div className="container" style={{textAlign: 'center'}}>
+              <p style={{color: 'var(--color-text-muted)', fontSize: '0.9rem', marginBottom: '40px', letterSpacing: '0.1em', textTransform: 'uppercase'}}>Trusted by Top-Tier Hosts</p>
+              <div style={{display: 'flex', gap: '40px', justifyContent: 'center', opacity: 0.5, flexWrap: 'wrap'}}>
+                {/* Simulated Logos */}
+                <span style={{fontSize: '1.5rem', fontWeight: 700}}>AIRBNB<span style={{fontWeight:300}}>LUXE</span></span>
+                <span style={{fontSize: '1.5rem', fontWeight: 700}}>VILLA<span style={{fontWeight:300}}>PRO</span></span>
+                <span style={{fontSize: '1.5rem', fontWeight: 700}}>ELITE<span style={{fontWeight:300}}>STAYS</span></span>
+              </div>
+           </div>
         </section>
       </main>
     );
@@ -149,85 +127,79 @@ export default function LandingPage() {
     <main className="min-h-screen">
       <nav className="lux-nav">
         <div className="container flex" style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
-          <div className="lux-title" style={{fontSize: '1.2rem', fontWeight:'bold'}}>
-            LUX<span>BUTLER</span> <span style={{opacity:0.5, fontSize:'0.7em', color:'#fff', marginLeft:'10px'}}>TABLEAU DE BORD</span>
+          <div style={{fontSize: '1.1rem', fontWeight:'600'}}>
+             Lux<span className="lux-text-gold">Butler</span> <span style={{opacity:0.4, fontWeight:400, marginLeft:'8px'}}>Console</span>
           </div>
-          <button onClick={() => setShowDashboard(false)} style={{color:'#A0A0A0', background:'transparent', border:'none', cursor:'pointer', fontFamily:'var(--font-heading)', textTransform:'uppercase', fontSize:'0.8rem'}}>Déconnexion</button>
+          <button onClick={() => setShowDashboard(false)} style={{color: 'var(--color-text-muted)', background:'transparent', border:'none', cursor:'pointer', fontSize:'0.9rem', fontWeight:500}}>Logout</button>
         </div>
       </nav>
 
-      <div className="container" style={{marginTop: '40px', paddingBottom:'40px'}}>
+      <div className="container" style={{marginTop: '40px', paddingBottom:'60px'}}>
         <div style={{display: 'grid', gridTemplateColumns: '1fr', gap: '30px'}}>
-            {/* Desktop grid tweak */}
             <style jsx>{`
-               @media (min-width: 768px) {
-                 div[style*="grid"] { grid-template-columns: 1fr 2fr !important; }
+               @media (min-width: 900px) {
+                 div[style*="grid"] { grid-template-columns: 350px 1fr !important; }
                }
             `}</style>
           
           {/* Add Property Form */}
-          <div className="card">
-            <h2 style={{fontSize: '1.25rem', marginBottom: '25px', display: 'flex', alignItems: 'center', gap: '10px', color:'#fff'}}>
-              <span style={{color: 'var(--color-gold)'}}>✦</span> Nouvelle Propriété
+          <div className="bento-card">
+            <h2 style={{fontSize: '1.1rem', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '10px'}}>
+              <span style={{color: 'var(--color-gold)'}}>+</span> New Property
             </h2>
             <form onSubmit={handleSubmit}>
-              <div style={{marginBottom: '15px'}}>
-                <label style={{display: 'block', fontSize: '0.8rem', marginBottom: '8px', color:'var(--color-gold)', letterSpacing:'1px', textTransform:'uppercase'}}>Nom de la Propriété</label>
-                <input className="lux-input" placeholder="ex: Villa Sérénité" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} required />
+              <div style={{marginBottom: '16px'}}>
+                <label style={{display: 'block', fontSize: '0.75rem', marginBottom: '8px', color: 'var(--color-text-muted)', letterSpacing:'0.05em', textTransform:'uppercase'}}>Property Name</label>
+                <input className="lux-input" placeholder="e.g. The Penthouse" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} required />
               </div>
               
-              <div style={{marginBottom: '15px'}}>
-                <label style={{display: 'block', fontSize: '0.8rem', marginBottom: '8px', color:'var(--color-gold)', letterSpacing:'1px', textTransform:'uppercase'}}>Configuration WiFi</label>
-                <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px'}}>
-                  <input className="lux-input" placeholder="Nom du réseau (SSID)" value={formData.wifi_ssid} onChange={e => setFormData({...formData, wifi_ssid: e.target.value})} />
-                  <input className="lux-input" placeholder="Mot de passe" value={formData.wifi_password} onChange={e => setFormData({...formData, wifi_password: e.target.value})} />
+              <div style={{marginBottom: '16px'}}>
+                <label style={{display: 'block', fontSize: '0.75rem', marginBottom: '8px', color: 'var(--color-text-muted)', letterSpacing:'0.05em', textTransform:'uppercase'}}>WiFi Configuration</label>
+                <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px'}}>
+                  <input className="lux-input" placeholder="SSID" value={formData.wifi_ssid} onChange={e => setFormData({...formData, wifi_ssid: e.target.value})} />
+                  <input className="lux-input" placeholder="Password" value={formData.wifi_password} onChange={e => setFormData({...formData, wifi_password: e.target.value})} />
                 </div>
               </div>
 
-              <div style={{marginBottom: '15px'}}>
-                <label style={{display: 'block', fontSize: '0.8rem', marginBottom: '8px', color:'var(--color-gold)', letterSpacing:'1px', textTransform:'uppercase'}}>Détails d'Accès</label>
-                <textarea className="lux-textarea" rows={2} placeholder="Code boîte à clés, instructions portail..." value={formData.instructions_entree} onChange={e => setFormData({...formData, instructions_entree: e.target.value})} />
+              <div style={{marginBottom: '16px'}}>
+                <label style={{display: 'block', fontSize: '0.75rem', marginBottom: '8px', color: 'var(--color-text-muted)', letterSpacing:'0.05em', textTransform:'uppercase'}}>Access Details</label>
+                <textarea className="lux-textarea" rows={2} placeholder="Keybox code..." value={formData.instructions_entree} onChange={e => setFormData({...formData, instructions_entree: e.target.value})} />
               </div>
 
-              <div style={{marginBottom: '25px'}}>
-                <label style={{display: 'block', fontSize: '0.8rem', marginBottom: '8px', color:'var(--color-gold)', letterSpacing:'1px', textTransform:'uppercase'}}>Guide de la Maison</label>
-                <textarea className="lux-textarea" rows={4} placeholder="Chauffage piscine, climatisation, gestion des poubelles..." value={formData.secrets_maison} onChange={e => setFormData({...formData, secrets_maison: e.target.value})} />
+              <div style={{marginBottom: '24px'}}>
+                <label style={{display: 'block', fontSize: '0.75rem', marginBottom: '8px', color: 'var(--color-text-muted)', letterSpacing:'0.05em', textTransform:'uppercase'}}>House Guide</label>
+                <textarea className="lux-textarea" rows={4} placeholder="Pool heating, rules..." value={formData.secrets_maison} onChange={e => setFormData({...formData, secrets_maison: e.target.value})} />
               </div>
 
-              <button type="submit" className="lux-button" style={{width: '100%'}}>Créer la Propriété</button>
+              <button type="submit" className="lux-button" style={{width: '100%', borderRadius: '8px'}}>Create Property</button>
             </form>
           </div>
 
           {/* Properties List */}
           <div>
-            <h2 style={{fontSize: '1.5rem', marginBottom: '25px', color:'#fff'}}>Propriétés Gérées</h2>
+            <h2 style={{fontSize: '1.5rem', marginBottom: '24px'}}>Managed Properties</h2>
             {properties.length === 0 ? (
-              <div style={{textAlign: 'center', padding: '60px', color: '#555', border:'1px dashed #333', borderRadius: '12px'}}>
-                Aucune propriété ajoutée pour le moment.
+              <div style={{textAlign: 'center', padding: '80px', color: 'var(--color-text-muted)', border:'1px dashed var(--color-border)', borderRadius: '16px'}}>
+                No properties yet.
               </div>
             ) : (
-              <div style={{display: 'grid', gap: '20px'}}>
+              <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px'}}>
                 {properties.map(p => (
-                  <div key={p.id} className="card" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin:0, padding:'20px 25px'}}>
+                  <div key={p.id} className="bento-card" style={{padding: '24px', display:'flex', flexDirection:'column', justifyContent:'space-between', minHeight:'180px'}}>
                     <div>
-                      <h3 style={{fontSize: '1.1rem', marginBottom: '5px', color:'#fff'}}>{p.name}</h3>
-                      <p style={{color: '#666', fontSize: '0.8rem', margin:0}}>WiFi: <span style={{color:'#888'}}>{p.wifi_ssid || 'Non défini'}</span></p>
+                      <h3 style={{fontSize: '1.2rem', marginBottom: '8px'}}>{p.name}</h3>
+                      <div style={{display:'flex', alignItems:'center', gap:'6px', fontSize:'0.85rem', color: 'var(--color-text-muted)'}}>
+                        <span style={{width:'8px', height:'8px', background: p.wifi_ssid ? '#10B981' : '#333', borderRadius:'50%'}}></span>
+                        {p.wifi_ssid ? 'WiFi Configured' : 'No WiFi'}
+                      </div>
                     </div>
-                    <div style={{display: 'flex', gap: '10px'}}>
-                       <a 
-                          href={`/${p.id}/chat`} 
-                          target="_blank" 
-                          className="lux-button secondary icon-btn"
-                          style={{textDecoration:'none', border:'1px solid #333', color:'#888'}}
-                       >
-                         💬 TEST
+                    <div style={{display: 'flex', gap: '10px', marginTop: '20px'}}>
+                       <a href={`/${p.id}/chat`} target="_blank" className="lux-button secondary icon-btn" style={{flex:1, justifyContent:'center', textDecoration:'none', border: '1px solid var(--color-border)'}}>
+                         Test Chat
                        </a>
-                       <button 
-                        className="lux-button secondary icon-btn" 
-                        onClick={() => generateQR(p.id)}
-                      >
-                        <span style={{fontSize:'1.2em'}}>⚄</span> QR CODE
-                      </button>
+                       <button className="lux-button icon-btn" onClick={() => generateQR(p.id)} style={{flex:1, justifyContent:'center'}}>
+                         QR Code
+                       </button>
                     </div>
                   </div>
                 ))}
