@@ -1,9 +1,16 @@
 import { NextResponse } from 'next/server';
-import { openai } from '@/lib/openai';
+import { getOpenAIClient } from '@/lib/openai';
 import { prisma } from '@/lib/db';
 
 export async function POST(req: Request) {
   try {
+    // Check key at runtime
+    if (!process.env.OPENAI_API_KEY) {
+      return NextResponse.json({ 
+        reply: "Service Unavailable: OpenAI API Key is missing on the server. Please add OPENAI_API_KEY in Vercel Settings."
+      });
+    }
+
     const { message, propertyId } = await req.json();
 
     if (!propertyId) {
@@ -25,6 +32,7 @@ export async function POST(req: Request) {
     Secrets: ${property.secrets_maison}
     `;
 
+    const openai = getOpenAIClient();
     const completion = await openai.chat.completions.create({
       model: "gpt-4o",
       messages: [
