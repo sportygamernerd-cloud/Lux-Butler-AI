@@ -97,6 +97,46 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
+
+        {/* Testimonials Section */}
+        <section className="container" style={{padding: '80px 20px', textAlign: 'center'}}>
+          <h2 className="lux-title" style={{marginBottom: '60px', fontSize: '2rem'}}>
+            Approuvé par les <span style={{color: 'var(--color-gold)'}}>Superhosts</span>
+          </h2>
+          <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '30px'}}>
+            
+            {/* Testimonial 1 */}
+            <div style={{background: '#1E1E1E', padding: '30px', borderRadius: '12px', border: '1px solid #333'}}>
+              <div style={{width: '50px', height: '50px', background: '#333', borderRadius: '50%', margin: '0 auto 20px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', color: 'var(--color-gold)'}}>M</div>
+              <p style={{fontStyle: 'italic', color: '#EAEAEA', marginBottom: '20px', lineHeight: '1.6'}}>
+                "Mes voyageurs ont des réponses instantanées, même à 3h du matin. C'est un gain de temps incroyable."
+              </p>
+              <div style={{color: 'var(--color-gold)', fontSize: '0.9rem', fontWeight: 'bold'}}>Marc</div>
+              <div style={{color: '#888', fontSize: '0.8rem'}}>Hôte à Paris</div>
+            </div>
+
+            {/* Testimonial 2 */}
+            <div style={{background: '#1E1E1E', padding: '30px', borderRadius: '12px', border: '1px solid #333'}}>
+              <div style={{width: '50px', height: '50px', background: '#333', borderRadius: '50%', margin: '0 auto 20px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', color: 'var(--color-gold)'}}>S</div>
+              <p style={{fontStyle: 'italic', color: '#EAEAEA', marginBottom: '20px', lineHeight: '1.6'}}>
+                "Plus besoin de répéter 10 fois le code d'entrée ou le mot de passe wifi. Tout est géré automatiquement."
+              </p>
+              <div style={{color: 'var(--color-gold)', fontSize: '0.9rem', fontWeight: 'bold'}}>Sophie</div>
+              <div style={{color: '#888', fontSize: '0.8rem'}}>Hôte à Lyon</div>
+            </div>
+
+            {/* Testimonial 3 */}
+            <div style={{background: '#1E1E1E', padding: '30px', borderRadius: '12px', border: '1px solid #333'}}>
+              <div style={{width: '50px', height: '50px', background: '#333', borderRadius: '50%', margin: '0 auto 20px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', color: 'var(--color-gold)'}}>T</div>
+              <p style={{fontStyle: 'italic', color: '#EAEAEA', marginBottom: '20px', lineHeight: '1.6'}}>
+                "Le design est magnifique et mes clients adorent la simplicité du QR Code. Un service vraiment premium."
+              </p>
+              <div style={{color: 'var(--color-gold)', fontSize: '0.9rem', fontWeight: 'bold'}}>Thomas</div>
+              <div style={{color: '#888', fontSize: '0.8rem'}}>Hôte à Nice</div>
+            </div>
+
+          </div>
+        </section>
       </main>
     );
   }
