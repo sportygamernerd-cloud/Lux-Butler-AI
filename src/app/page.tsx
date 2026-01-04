@@ -44,6 +44,9 @@ export default function LandingPage() {
          <img src="${qr}" width="300" />
       </div>
       <p style="margin-top:30px; font-size:0.9rem; color:#555;">Scannez pour vous connecter instantanément</p>
+      <p style="margin-top:20px;">
+        <a href="${url}" target="_blank" style="color:#D4AF37; text-decoration:none; border-bottom:1px solid #D4AF37; padding-bottom:2px;">Ouvrir le chat directement</a>
+      </p>
     </div>`);
   };
 
@@ -210,7 +213,15 @@ export default function LandingPage() {
                       <h3 style={{fontSize: '1.1rem', marginBottom: '5px', color:'#fff'}}>{p.name}</h3>
                       <p style={{color: '#666', fontSize: '0.8rem', margin:0}}>WiFi: <span style={{color:'#888'}}>{p.wifi_ssid || 'Non défini'}</span></p>
                     </div>
-                    <div>
+                    <div style={{display: 'flex', gap: '10px'}}>
+                       <a 
+                          href={`/${p.id}/chat`} 
+                          target="_blank" 
+                          className="lux-button secondary icon-btn"
+                          style={{textDecoration:'none', border:'1px solid #333', color:'#888'}}
+                       >
+                         💬 TEST
+                       </a>
                        <button 
                         className="lux-button secondary icon-btn" 
                         onClick={() => generateQR(p.id)}
