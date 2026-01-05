@@ -60,7 +60,6 @@ function LiveDemoChat() {
     };
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
-    // FIX: Only scroll when a NEW message is added (length changes), not on every character.
     useEffect(() => { 
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }); 
     }, [history.length]);
@@ -103,50 +102,11 @@ function LiveDemoChat() {
     );
 }
 
-// Login Modal
-function LoginModal({ onLogin, onClose }: { onLogin: () => void, onClose: () => void }) {
-    const [pass, setPass] = useState('');
-    const [err, setErr] = useState('');
-
-    const check = (e: React.FormEvent) => {
-        e.preventDefault();
-        // In a real app, verify against API. Here we simulate for the user request logic.
-        if (pass === 'admin2026' || pass === 'luxbutler') {
-            onLogin();
-        } else {
-            setErr('Mot de passe incorrect');
-        }
-    };
-
-    return (
-        <div style={{position:'fixed', inset:0, background:'rgba(0,0,0,0.8)', backdropFilter:'blur(10px)', zIndex:100, display:'flex', alignItems:'center', justifyContent:'center'}}>
-            <div className="bento-card" style={{width:'100%', maxWidth:'400px', padding:'40px'}}>
-                <h2 style={{fontSize:'1.5rem', marginBottom:'20px', textAlign:'center'}}>Accès Sécurisé</h2>
-                <form onSubmit={check}>
-                    <input 
-                        type="password" 
-                        className="lux-input" 
-                        placeholder="Mot de passe Hôte" 
-                        autoFocus 
-                        value={pass}
-                        onChange={e => setPass(e.target.value)}
-                    />
-                    {err && <p style={{color:'#EF4444', fontSize:'0.8rem', marginTop:'-10px', marginBottom:'15px'}}>{err}</p>}
-                    <button type="submit" className="lux-button" style={{width:'100%'}}>Entrer</button>
-                    <button type="button" onClick={onClose} style={{width:'100%', background:'transparent', border:'none', color:'#666', marginTop:'15px', cursor:'pointer'}}>Annuler</button>
-                </form>
-            </div>
-        </div>
-    );
-}
-
-
 // --- MAIN PAGE ---
 
 export default function LandingPage() {
   const [properties, setProperties] = useState<any[]>([]);
   const [showDashboard, setShowDashboard] = useState(false);
-  const [showLogin, setShowLogin] = useState(false); // Security Gate
   const [manualMode, setManualMode] = useState(false); // New: Manual Entry Flag
   
   const [formData, setFormData] = useState({
@@ -170,11 +130,6 @@ export default function LandingPage() {
         fetch('/api/properties').then(res => res.json()).then(setProperties);
     }
   }, [showDashboard]);
-
-  const handleLoginSuccess = () => {
-      setShowLogin(false);
-      setShowDashboard(true);
-  };
 
   const handleImport = async () => {
     if (!importUrl) return;
@@ -267,14 +222,12 @@ export default function LandingPage() {
   if (!showDashboard) {
     return (
       <main className="min-h-screen">
-        {showLogin && <LoginModal onLogin={handleLoginSuccess} onClose={() => setShowLogin(false)} />}
-        
         <nav className="lux-nav">
           <div className="container flex" style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
             <div style={{fontSize: '1.25rem', fontWeight:'600', letterSpacing: '-0.02em', color: '#fff'}}>
               Lux<span className="lux-text-gold">Butler</span>
             </div>
-            <button className="lux-button secondary icon-btn" onClick={() => setShowLogin(true)} style={{borderRadius: '100px', fontSize: '0.8rem'}}>
+            <button className="lux-button secondary icon-btn" onClick={() => setShowDashboard(true)} style={{borderRadius: '100px', fontSize: '0.8rem'}}>
               Connexion Hôte
             </button>
           </div>
@@ -292,7 +245,7 @@ export default function LandingPage() {
             Sublimez l'expérience de vos voyageurs avec un majordome IA qui semble humain, haut de gamme et disponible 24/7.
           </p>
           <div style={{display: 'flex', gap: '16px', justifyContent: 'center'}}>
-            <button className="lux-button" onClick={() => setShowLogin(true)}>Essai Gratuit</button>
+            <button className="lux-button" onClick={() => setShowDashboard(true)}>Essai Gratuit</button>
             <button className="lux-button secondary">Voir Démo Live</button>
           </div>
         </section>
