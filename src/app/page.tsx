@@ -28,6 +28,7 @@ function LiveDemoChat() {
             let i = 0;
             const isWifi = q.label === "Code WiFi ?";
             
+            // Add empty assistant message
             setHistory(prev => [...prev, {role: 'assistant', text: ''}]);
             
             const interval = setInterval(() => {
@@ -59,7 +60,10 @@ function LiveDemoChat() {
     };
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
-    useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [history]);
+    // FIX: Only scroll when a NEW message is added (length changes), not on every character.
+    useEffect(() => { 
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }); 
+    }, [history.length]);
 
     return (
         <>
@@ -143,6 +147,7 @@ export default function LandingPage() {
   const [properties, setProperties] = useState<any[]>([]);
   const [showDashboard, setShowDashboard] = useState(false);
   const [showLogin, setShowLogin] = useState(false); // Security Gate
+  const [manualMode, setManualMode] = useState(false); // New: Manual Entry Flag
   
   const [formData, setFormData] = useState({
     name: '',
@@ -229,6 +234,7 @@ export default function LandingPage() {
     setImportedData(null);
     setImportUrl('');
     setProgress(0);
+    setManualMode(false); // Reset manual mode
   };
 
   const generateQR = async (id: string) => {
@@ -367,8 +373,9 @@ export default function LandingPage() {
       </nav>
 
       <div className="container" style={{marginTop: '40px', paddingBottom:'60px'}}>
-        {/* If no properties, show HERO onboarding */}
-        {properties.length === 0 && !importedData && (
+        
+        {/* HERO Onboarding (Zero State) */}
+        {properties.length === 0 && !importedData && !manualMode && (
             <div style={{textAlign: 'center', margin: '40px auto 100px', maxWidth: '700px'}}>
                 <h1 style={{fontSize: 'clamp(2.5rem, 5vw, 4rem)', lineHeight: 1.1, marginBottom: '40px'}}>
                   Votre Majordome IA est <br/><span className="lux-text-gold">à un clic.</span>
@@ -422,13 +429,22 @@ export default function LandingPage() {
                             Créer mon Majordome IA
                         </button>
                     </div>
+
+                    <div style={{marginTop: '20px', textAlign: 'center', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '20px'}}>
+                        <button 
+                            onClick={() => setManualMode(true)}
+                            style={{background: 'transparent', border: 'none', color: 'var(--color-text-muted)', cursor: 'pointer', textDecoration: 'underline', fontSize: '0.9rem'}}
+                        >
+                            Je n'ai pas de lien ? Saisie manuelle
+                        </button>
+                    </div>
                 </div>
                 <p style={{marginTop: '20px', color: '#555', fontSize: '0.9rem'}}>Utilisé par 500+ Superhosts dans le monde</p>
             </div>
         )}
 
-        {/* If properties exist OR we are in editing mode after import */}
-        {(properties.length > 0 || importedData) && (
+        {/* If properties exist OR we are in editing mode (Imported OR Manual) */}
+        {(properties.length > 0 || importedData || manualMode) && (
             <div style={{display: 'grid', gridTemplateColumns: '1fr', gap: '30px'}}>
                 <style jsx>{`
                    @media (min-width: 900px) {
@@ -436,14 +452,14 @@ export default function LandingPage() {
                    }
                 `}</style>
 
-              {/* Business Metrics Section (Stripe Style) */}
-              {properties.length > 0 && (
+              {/* Business Metrics Section */}
+              {properties.length > 0 && ( /* ... same metrics code ... */
                 <div style={{gridColumn: '1 / -1', marginBottom: '10px'}}>
                     <h2 style={{fontSize: '1.2rem', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px'}}>
                         <span style={{color: 'var(--color-gold)'}}>📈</span> Performance Business
                     </h2>
                     <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px'}}>
-                        {/* Time Saved Card */}
+                        {/* Metrics Cards */}
                         <div className="bento-card" style={{padding: '24px', display:'flex', flexDirection:'column', gap:'5px'}}>
                             <div style={{fontSize: '0.85rem', color: 'var(--color-text-muted)', textTransform:'uppercase', letterSpacing:'0.05em'}}>Temps Économisé</div>
                             <div style={{fontSize: '2.5rem', fontWeight: '700', color: '#fff', lineHeight: 1}}>
@@ -453,8 +469,6 @@ export default function LandingPage() {
                                 <span>▲ 12%</span> <span style={{color:'#555'}}>vs mois dernier</span>
                             </div>
                         </div>
-
-                         {/* Automation Rate Card */}
                          <div className="bento-card" style={{padding: '24px', display:'flex', flexDirection:'column', gap:'5px'}}>
                             <div style={{fontSize: '0.85rem', color: 'var(--color-text-muted)', textTransform:'uppercase', letterSpacing:'0.05em'}}>Taux d'Automatisation</div>
                             <div style={{fontSize: '2.5rem', fontWeight: '700', color: '#fff', lineHeight: 1}}>
@@ -464,8 +478,6 @@ export default function LandingPage() {
                                 <span>+2.1%</span> <span style={{color:'#555'}}>précision IA</span>
                             </div>
                         </div>
-
-                        {/* Guest Satisfaction Card */}
                          <div className="bento-card" style={{padding: '24px', display:'flex', flexDirection:'column', gap:'5px'}}>
                             <div style={{fontSize: '0.85rem', color: 'var(--color-text-muted)', textTransform:'uppercase', letterSpacing:'0.05em'}}>Satisfaction Voyageurs</div>
                             <div style={{fontSize: '2.5rem', fontWeight: '700', color: '#fff', lineHeight: 1}}>
@@ -493,6 +505,11 @@ export default function LandingPage() {
                             Nous avons trouvé {importedData.house_rules?.length} règles et le WiFi.
                         </div>
                     </div>
+                )}
+                
+                {/* Back Button for Manual Mode */}
+                {manualMode && !importedData && (
+                     <button onClick={() => setManualMode(false)} style={{background:'transparent', border:'none', color:'#666', marginBottom:'10px', cursor:'pointer'}}>← Retour</button>
                 )}
 
                 <h2 style={{fontSize: '1.1rem', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '10px'}}>
