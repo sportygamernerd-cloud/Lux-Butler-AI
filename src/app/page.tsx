@@ -125,7 +125,6 @@ export default function LandingPage() {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    // Only fetch if dashboard is accessed (optimisation/security)
     if (showDashboard) {
         fetch('/api/properties').then(res => res.json()).then(setProperties);
     }
@@ -406,7 +405,7 @@ export default function LandingPage() {
                 `}</style>
 
               {/* Business Metrics Section */}
-              {properties.length > 0 && ( /* ... same metrics code ... */
+              {properties.length > 0 && (
                 <div style={{gridColumn: '1 / -1', marginBottom: '10px'}}>
                     <h2 style={{fontSize: '1.2rem', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px'}}>
                         <span style={{color: 'var(--color-gold)'}}>📈</span> Performance Business
@@ -478,9 +477,21 @@ export default function LandingPage() {
                   
                   <div style={{marginBottom: '16px'}}>
                     <label style={{display: 'block', fontSize: '0.75rem', marginBottom: '8px', color: 'var(--color-text-muted)', letterSpacing:'0.05em', textTransform:'uppercase'}}>Configuration WiFi</label>
-                    <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px'}}>
-                      <input className="lux-input" placeholder="SSID" value={formData.wifi_ssid} onChange={e => setFormData({...formData, wifi_ssid: e.target.value})} />
-                      <input className="lux-input" placeholder="Mot de Passe" value={formData.wifi_password} onChange={e => setFormData({...formData, wifi_password: e.target.value})} />
+                    <div style={{display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: '12px'}}>
+                      <input 
+                        className="lux-input" 
+                        placeholder="SSID" 
+                        value={formData.wifi_ssid} 
+                        onChange={e => setFormData({...formData, wifi_ssid: e.target.value})} 
+                        style={{marginBottom: 0, minWidth: 0}}
+                      />
+                      <input 
+                        className="lux-input" 
+                        placeholder="Mot de Passe" 
+                        value={formData.wifi_password} 
+                        onChange={e => setFormData({...formData, wifi_password: e.target.value})} 
+                        style={{marginBottom: 0, minWidth: 0}}
+                      />
                     </div>
                   </div>
 
