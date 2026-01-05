@@ -4,16 +4,16 @@ import QRCode from 'qrcode';
 
 // Sub-component for the Live Demo
 function LiveDemoChat() {
-    const [history, setHistory] = useState<{role: 'user'|'assistant', text: string}[]>([
-        {role: 'assistant', text: "Hello! I am your concierge. How can I help you settle in?"}
+    const [history, setHistory] = useState<{role: 'user'|'assistant', text: React.ReactNode}[]>([
+        {role: 'assistant', text: "Bonjour ! Je suis votre majordome. Comment puis-je faciliter votre séjour ?"}
     ]);
     const [isTyping, setIsTyping] = useState(false);
     
     // Mock Questions DB
     const questions = [
-        { label: "WiFi Password?", prompt: "What is the WiFi password?", answer: "The network is 'Villa_Dreams_5G' and the password is 'LuxuryStay2026'. Signal is strongest in the living room." },
-        { label: "Early Check-in?", prompt: "Can I check in at 11 AM?", answer: "Standard check-in is 3 PM to ensure deep cleaning. However, I can ask the team if luggage drop-off is possible at 11 AM?" },
-        { label: "Pool Heating?", prompt: "How do I turn on the pool heat?", answer: "The pool heating is automatic and set to 28°C. If you wish to adjust it, the control panel is located in the pool house, code 1234." }
+        { label: "Code WiFi ?", prompt: "Quel est le mot de passe WiFi ?", answer: "Le réseau est 'Villa_Reve_5G' et le mot de passe est 'Luxe2026'. Le signal est optimal dans le salon." },
+        { label: "Arrivée anticipée ?", prompt: "Puis-je arriver à 11h ?", answer: "L'arrivée standard est à 15h pour garantir un nettoyage parfait. Toutefois, je peux demander à l'équipe si le dépôt de bagages est possible à 11h ?" },
+        { label: "Chauffage Piscine ?", prompt: "Comment chauffer la piscine ?", answer: "Le chauffage est automatique et réglé sur 28°C. Pour l'ajuster, le panneau de contrôle se trouve dans le local technique, code 1234." }
     ];
 
     const ask = (q: typeof questions[0]) => {
@@ -26,13 +26,29 @@ function LiveDemoChat() {
             // Typing effect
             const text = q.answer;
             let i = 0;
+            // Add styled wifi block if it's the wifi question
+            const isWifi = q.label === "Code WiFi ?";
+            
             setHistory(prev => [...prev, {role: 'assistant', text: ''}]);
             
             const interval = setInterval(() => {
                 setHistory(prev => {
                     const newHist = [...prev];
                     const lastMsg = newHist[newHist.length - 1];
-                    lastMsg.text = text.substring(0, i + 1);
+                    const currentText = text.substring(0, i + 1);
+                    
+                    if (isWifi && i === text.length - 1) {
+                         // Final render for WiFi with specific design
+                         lastMsg.text = (
+                            <div>
+                                Le réseau est <strong>Villa_Reve_5G</strong><br/>
+                                Mot de passe : <span style={{display:'inline-block', background:'rgba(0,0,0,0.2)', padding:'2px 8px', borderRadius:'4px', fontFamily:'monospace', border:'1px solid var(--color-gold)'}}>Luxe2026</span><br/>
+                                <span style={{fontSize:'0.85em', opacity:0.8}}>Le signal est optimal dans le salon.</span>
+                            </div>
+                         );
+                    } else {
+                        lastMsg.text = currentText;
+                    }
                     return newHist;
                 });
                 i++;
@@ -57,7 +73,7 @@ function LiveDemoChat() {
                         padding: '12px 16px',
                         borderRadius: msg.role === 'user' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
                         background: msg.role === 'user' ? 'var(--color-gold)' : 'rgba(255,255,255,0.05)',
-                        color: msg.role === 'user' ? '#000' : '#fff',
+                        color: msg.role === 'user' ? '#0A0A0A' : '#fff', // Fixed contrast for user bubble
                         fontSize: '0.9rem',
                         lineHeight: '1.5',
                         border: msg.role === 'assistant' ? '1px solid var(--color-border)' : 'none'
@@ -65,8 +81,8 @@ function LiveDemoChat() {
                         {msg.text}
                     </div>
                 ))}
-                {isTyping && history[history.length - 1].text === '' && (
-                     <div style={{alignSelf: 'flex-start', color: '#666', fontSize:'0.8rem', marginLeft:'10px'}}>Butler is typing...</div>
+                {isTyping && typeof history[history.length - 1].text === 'string' && (history[history.length - 1].text as string) === '' && (
+                     <div style={{alignSelf: 'flex-start', color: '#666', fontSize:'0.8rem', marginLeft:'10px'}}>Le majordome écrit...</div>
                 )}
                 <div ref={messagesEndRef} />
             </div>
@@ -147,7 +163,7 @@ export default function LandingPage() {
         }
     } catch(e) {
         clearInterval(interval);
-        alert("Import failed");
+        alert("Échec de l'importation");
         setProgress(0);
     }
     setIsImporting(false);
@@ -187,10 +203,10 @@ export default function LandingPage() {
       </style>
       <div class="card">
         <h1>LUX BUTLER</h1>
-        <p style="color: #A1A1AA;">COMPLIMENTARY CONCIERGE ACCESS</p>
+        <p style="color: #A1A1AA;">ACCÈS CONCIERGERIE OFFERT</p>
         <div class="qr-box"><img src="${qr}" width="300" /></div>
-        <p style="color: #EAEAEA; font-size: 1.1rem;">Scan to connect instantly</p>
-        <a href="${url}" target="_blank" class="btn-link">Open Chat Directly</a>
+        <p style="color: #EAEAEA; font-size: 1.1rem;">Scannez pour connexion instantanée</p>
+        <a href="${url}" target="_blank" class="btn-link">Ouvrir le Chat</a>
       </div>
     `);
   };
@@ -204,7 +220,7 @@ export default function LandingPage() {
               Lux<span className="lux-text-gold">Butler</span>
             </div>
             <button className="lux-button secondary icon-btn" onClick={() => setShowDashboard(true)} style={{borderRadius: '100px', fontSize: '0.8rem'}}>
-              Owner Login
+              Connexion Hôte
             </button>
           </div>
         </nav>
@@ -212,17 +228,17 @@ export default function LandingPage() {
         {/* Hero Section */}
         <section className="container" style={{padding: '100px 20px 60px', textAlign:'center'}}>
           <div style={{display: 'inline-block', padding: '6px 16px', background: 'rgba(215, 190, 130, 0.1)', borderRadius: '100px', color: '#D7BE82', fontSize: '0.85rem', marginBottom: '24px', fontWeight: '500'}}>
-             ✨ The Future of Hospitality
+             ✨ Le Futur de l'Hospitalité
           </div>
           <h1 style={{fontSize: 'clamp(3rem, 6vw, 5rem)', lineHeight: 1.1, marginBottom: '24px'}}>
-            Concierge AI <br/><span className="lux-text-gold">Reimagined.</span>
+            La Conciergerie IA <br/><span className="lux-text-gold">Réinventée.</span>
           </h1>
           <p style={{fontSize: '1.2rem', color: 'var(--color-text-muted)', maxWidth: '580px', margin: '0 auto 48px', fontWeight: 400}}>
-            Elevate your guest experience with an AI butler that feels human, looks premium, and works 24/7.
+            Sublimez l'expérience de vos voyageurs avec un majordome IA qui semble humain, haut de gamme et disponible 24/7.
           </p>
           <div style={{display: 'flex', gap: '16px', justifyContent: 'center'}}>
-            <button className="lux-button" onClick={() => setShowDashboard(true)}>Start Free Trial</button>
-            <button className="lux-button secondary">View Live Demo</button>
+            <button className="lux-button" onClick={() => setShowDashboard(true)}>Essai Gratuit</button>
+            <button className="lux-button secondary">Voir Démo Live</button>
           </div>
         </section>
 
@@ -236,13 +252,13 @@ export default function LandingPage() {
               {/* Fake Phone Header */}
               <div style={{padding: '15px 20px', background: 'rgba(255,255,255,0.03)', borderBottom: '1px solid var(--color-border)', display: 'flex', alignItems: 'center', justifyContent:'space-between'}}>
                   <div style={{display:'flex', alignItems:'center', gap:'10px'}}>
-                      <div style={{width:'30px', height:'30px', borderRadius:'50%', background:'var(--color-gold)', display:'flex', alignItems:'center', justifyContent:'center', color:'#000', fontWeight:'bold', fontSize:'0.8rem'}}>LB</div>
+                      <div style={{width:'30px', height:'30px', borderRadius:'50%', background:'var(--color-gold)', display:'flex', alignItems:'center', justifyContent:'center', color:'#0A0A0A', fontWeight:'bold', fontSize:'0.8rem'}}>LB</div>
                       <div>
                           <div style={{fontSize:'0.9rem', fontWeight:'600', color:'#fff'}}>Lux Butler</div>
-                          <div style={{fontSize:'0.7rem', color:'#10B981'}}>Online</div>
+                          <div style={{fontSize:'0.7rem', color:'#10B981'}}>En ligne</div>
                       </div>
                   </div>
-                  <div style={{fontSize:'0.8rem', color:'var(--color-text-muted)'}}>Live Demo</div>
+                  <div style={{fontSize:'0.8rem', color:'var(--color-text-muted)'}}>Démo Live</div>
               </div>
 
               {/* Chat Area */}
@@ -251,7 +267,7 @@ export default function LandingPage() {
               </div>
            </div>
            <p style={{marginTop: '20px', fontSize:'0.85rem', color:'var(--color-text-muted)', fontStyle:'italic'}}>
-               * Click a question above to test the AI response speed
+               * Cliquez sur une question pour tester la vitesse de l'IA
            </p>
         </section>
 
@@ -259,16 +275,16 @@ export default function LandingPage() {
         <section className="container" style={{paddingBottom: '120px'}}>
           <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '24px'}}>
             <div className="bento-card" style={{gridColumn: 'span 2'}}>
-              <h3 style={{fontSize: '1.5rem', marginBottom: '12px'}}>24/7 Intelligence</h3>
-              <p style={{color: 'var(--color-text-muted)'}}>Instantly answers questions about WiFi, amenities, and local recommendations without you lifting a finger.</p>
+              <h3 style={{fontSize: '1.5rem', marginBottom: '12px'}}>Intelligence 24/7</h3>
+              <p style={{color: 'var(--color-text-muted)'}}>Répond instantanément aux questions sur le WiFi, les équipements et les envies locales sans que vous leviez le petit doigt.</p>
             </div>
             <div className="bento-card">
-              <h3 style={{fontSize: '1.25rem', marginBottom: '12px'}}>Zero-Download</h3>
-              <p style={{color: 'var(--color-text-muted)'}}>Guests scan a QR code. No apps, no registrations. Just instant luxury service.</p>
+              <h3 style={{fontSize: '1.25rem', marginBottom: '12px'}}>Zéro Téléchargement</h3>
+              <p style={{color: 'var(--color-text-muted)'}}>Vos invités scannent un QR Code. Pas d'app, pas d'inscription. Juste un service de luxe immédiat.</p>
             </div>
             <div className="bento-card">
-              <h3 style={{fontSize: '1.25rem', marginBottom: '12px'}}>Polyglot Core</h3>
-              <p style={{color: 'var(--color-text-muted)'}}>Native-level fluency in 50+ languages. Make every guest feel at home.</p>
+              <h3 style={{fontSize: '1.25rem', marginBottom: '12px'}}>Cœur Polyglotte</h3>
+              <p style={{color: 'var(--color-text-muted)'}}>Bilingue natif dans plus de 50 langues. Faites en sorte que chaque invité se sente chez lui.</p>
             </div>
           </div>
         </section>
@@ -276,7 +292,7 @@ export default function LandingPage() {
         {/* Social Proof */}
         <section style={{borderTop: '1px solid var(--color-border)', padding: '100px 0'}}>
            <div className="container" style={{textAlign: 'center'}}>
-              <p style={{color: 'var(--color-text-muted)', fontSize: '0.9rem', marginBottom: '40px', letterSpacing: '0.1em', textTransform: 'uppercase'}}>Trusted by Top-Tier Hosts</p>
+              <p style={{color: 'var(--color-text-muted)', fontSize: '0.9rem', marginBottom: '40px', letterSpacing: '0.1em', textTransform: 'uppercase'}}>Approuvé par les Superhosts</p>
               <div style={{display: 'flex', gap: '40px', justifyContent: 'center', opacity: 0.5, flexWrap: 'wrap'}}>
                 {/* Simulated Logos */}
                 <span style={{fontSize: '1.5rem', fontWeight: 700}}>AIRBNB<span style={{fontWeight:300}}>LUXE</span></span>
@@ -297,7 +313,7 @@ export default function LandingPage() {
           <div style={{fontSize: '1.1rem', fontWeight:'600'}}>
              Lux<span className="lux-text-gold">Butler</span> <span style={{opacity:0.4, fontWeight:400, marginLeft:'8px'}}>Console</span>
           </div>
-          <button onClick={() => setShowDashboard(false)} style={{color: 'var(--color-text-muted)', background:'transparent', border:'none', cursor:'pointer', fontSize:'0.9rem', fontWeight:500}}>Logout</button>
+          <button onClick={() => setShowDashboard(false)} style={{color: 'var(--color-text-muted)', background:'transparent', border:'none', cursor:'pointer', fontSize:'0.9rem', fontWeight:500}}>Déconnexion</button>
         </div>
       </nav>
 
@@ -306,7 +322,7 @@ export default function LandingPage() {
         {properties.length === 0 && !importedData && (
             <div style={{textAlign: 'center', margin: '40px auto 100px', maxWidth: '700px'}}>
                 <h1 style={{fontSize: 'clamp(2.5rem, 5vw, 4rem)', lineHeight: 1.1, marginBottom: '40px'}}>
-                  Your AI Butler is <br/><span className="lux-text-gold">One Click Away.</span>
+                  Votre Majordome IA est <br/><span className="lux-text-gold">à un clic.</span>
                 </h1>
                 
                 <div className="bento-card" style={{padding: '40px', textAlign: 'left', position: 'relative', overflow:'hidden'}}>
@@ -321,16 +337,16 @@ export default function LandingPage() {
                                  <div style={{width: `${progress}%`, height: '100%', background: 'var(--color-gold)', transition: 'width 0.5s ease'}}></div>
                              </div>
                              <h3 style={{color: '#fff', fontSize: '1.2rem', marginBottom: '5px'}}>
-                                {progress < 30 && "Scanning listing..."}
-                                {progress >= 30 && progress < 70 && "Analysing house rules..."}
-                                {progress >= 70 && progress < 100 && "Training AI Model..."}
-                                {progress === 100 && "Concierge Ready!"}
+                                {progress < 30 && "Scan de l'annonce..."}
+                                {progress >= 30 && progress < 70 && "Analyse du règlement..."}
+                                {progress >= 70 && progress < 100 && "Entraînement de l'IA..."}
+                                {progress === 100 && "Majordome Prêt !"}
                              </h3>
-                             <p style={{color: 'var(--color-text-muted)'}}>{progress}% completed</p>
+                             <p style={{color: 'var(--color-text-muted)'}}>{progress}% terminé</p>
                         </div>
                     )}
 
-                    <label style={{display: 'block', fontSize: '0.85rem', marginBottom: '12px', color: 'var(--color-text-muted)', letterSpacing:'0.05em', textTransform:'uppercase'}}>Paste your Airbnb / Booking.com Link</label>
+                    <label style={{display: 'block', fontSize: '0.85rem', marginBottom: '12px', color: 'var(--color-text-muted)', letterSpacing:'0.05em', textTransform:'uppercase'}}>Collez votre lien Airbnb / Booking</label>
                     <div style={{display: 'flex', gap: '15px', flexDirection: 'column'}}>
                         <input 
                             className="lux-input" 
@@ -347,18 +363,18 @@ export default function LandingPage() {
                             style={{
                                 width: '100%', padding: '20px', fontSize: '1rem', 
                                 background: importUrl ? 'var(--color-gold)' : '#222', 
-                                color: importUrl ? '#000' : '#555',
+                                color: importUrl ? '#0A0A0A' : '#555',
                                 cursor: importUrl ? 'pointer' : 'not-allowed',
                                 transform: importUrl ? 'scale(1)' : 'scale(1)'
                             }}
                             onClick={handleImport}
                             disabled={!importUrl}
                         >
-                            Build My AI Concierge
+                            Créer mon Majordome IA
                         </button>
                     </div>
                 </div>
-                <p style={{marginTop: '20px', color: '#555', fontSize: '0.9rem'}}>Used by 500+ Superhosts worldwide</p>
+                <p style={{marginTop: '20px', color: '#555', fontSize: '0.9rem'}}>Utilisé par 500+ Superhosts dans le monde</p>
             </div>
         )}
 
@@ -381,53 +397,53 @@ export default function LandingPage() {
                     }}>
                         <span style={{fontSize: '1.2rem'}}>🎉</span>
                         <div style={{color: '#fff', fontSize: '0.9rem'}}>
-                            <strong>AI Ready (90%)</strong><br/>
-                            We found {importedData.house_rules?.length} rules and WiFi details.
+                            <strong>IA Prête (90%)</strong><br/>
+                            Nous avons trouvé {importedData.house_rules?.length} règles et le WiFi.
                         </div>
                     </div>
                 )}
 
                 <h2 style={{fontSize: '1.1rem', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '10px'}}>
                    <span style={{color: 'var(--color-gold)'}}>{importedData ? '✦' : '+'}</span> 
-                   {importedData ? 'Review AI Knowledge Base' : 'New Property'}
+                   {importedData ? 'Vérifier la Base de Connaissances' : 'Nouvelle Propriété'}
                 </h2>
 
                 <form onSubmit={handleSubmit}>
                   <div style={{marginBottom: '16px'}}>
-                    <label style={{display: 'block', fontSize: '0.75rem', marginBottom: '8px', color: 'var(--color-text-muted)', letterSpacing:'0.05em', textTransform:'uppercase'}}>Property Name</label>
-                    <input className="lux-input" placeholder="e.g. The Penthouse" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} required />
+                    <label style={{display: 'block', fontSize: '0.75rem', marginBottom: '8px', color: 'var(--color-text-muted)', letterSpacing:'0.05em', textTransform:'uppercase'}}>Nom de la Propriété</label>
+                    <input className="lux-input" placeholder="ex: Le Penthouse" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} required />
                   </div>
                   
                   <div style={{marginBottom: '16px'}}>
-                    <label style={{display: 'block', fontSize: '0.75rem', marginBottom: '8px', color: 'var(--color-text-muted)', letterSpacing:'0.05em', textTransform:'uppercase'}}>WiFi Configuration</label>
+                    <label style={{display: 'block', fontSize: '0.75rem', marginBottom: '8px', color: 'var(--color-text-muted)', letterSpacing:'0.05em', textTransform:'uppercase'}}>Configuration WiFi</label>
                     <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px'}}>
                       <input className="lux-input" placeholder="SSID" value={formData.wifi_ssid} onChange={e => setFormData({...formData, wifi_ssid: e.target.value})} />
-                      <input className="lux-input" placeholder="Password" value={formData.wifi_password} onChange={e => setFormData({...formData, wifi_password: e.target.value})} />
+                      <input className="lux-input" placeholder="Mot de Passe" value={formData.wifi_password} onChange={e => setFormData({...formData, wifi_password: e.target.value})} />
                     </div>
                   </div>
 
                   <div style={{marginBottom: '16px'}}>
-                    <label style={{display: 'block', fontSize: '0.75rem', marginBottom: '8px', color: 'var(--color-text-muted)', letterSpacing:'0.05em', textTransform:'uppercase'}}>Access Details</label>
-                    <textarea className="lux-textarea" rows={2} placeholder="Keybox code..." value={formData.instructions_entree} onChange={e => setFormData({...formData, instructions_entree: e.target.value})} />
+                    <label style={{display: 'block', fontSize: '0.75rem', marginBottom: '8px', color: 'var(--color-text-muted)', letterSpacing:'0.05em', textTransform:'uppercase'}}>Détails d'Accès</label>
+                    <textarea className="lux-textarea" rows={2} placeholder="Code boîte à clés..." value={formData.instructions_entree} onChange={e => setFormData({...formData, instructions_entree: e.target.value})} />
                   </div>
 
                   <div style={{marginBottom: '24px'}}>
-                    <label style={{display: 'block', fontSize: '0.75rem', marginBottom: '8px', color: 'var(--color-text-muted)', letterSpacing:'0.05em', textTransform:'uppercase'}}>House Guide</label>
-                    <textarea className="lux-textarea" rows={6} placeholder="Pool heating, rules..." value={formData.secrets_maison} onChange={e => setFormData({...formData, secrets_maison: e.target.value})} />
+                    <label style={{display: 'block', fontSize: '0.75rem', marginBottom: '8px', color: 'var(--color-text-muted)', letterSpacing:'0.05em', textTransform:'uppercase'}}>Guide de la Maison</label>
+                    <textarea className="lux-textarea" rows={6} placeholder="Chauffage piscine, règles..." value={formData.secrets_maison} onChange={e => setFormData({...formData, secrets_maison: e.target.value})} />
                   </div>
 
                   <button type="submit" className="lux-button" style={{width: '100%', borderRadius: '8px'}}>
-                      {importedData ? 'Activate Concierge' : 'Create Property'}
+                      {importedData ? 'Activer le Majordome' : 'Créer Propriété'}
                   </button>
                 </form>
               </div>
 
               {/* Properties List */}
               <div>
-                <h2 style={{fontSize: '1.5rem', marginBottom: '24px'}}>Managed Properties</h2>
+                <h2 style={{fontSize: '1.5rem', marginBottom: '24px'}}>Propriétés Gérées</h2>
                 {properties.length === 0 ? (
                   <div style={{textAlign: 'center', padding: '80px', color: 'var(--color-text-muted)', border:'1px dashed var(--color-border)', borderRadius: '16px'}}>
-                    No properties active. <br/>Save the form to activate your first butler.
+                    Aucune propriété active. <br/>Sauvegardez le formulaire pour activer votre premier majordome.
                   </div>
                 ) : (
                   <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px'}}>
@@ -437,15 +453,15 @@ export default function LandingPage() {
                           <h3 style={{fontSize: '1.2rem', marginBottom: '8px'}}>{p.name}</h3>
                           <div style={{display:'flex', alignItems:'center', gap:'6px', fontSize:'0.85rem', color: 'var(--color-text-muted)'}}>
                             <span style={{width:'8px', height:'8px', background: p.wifi_ssid ? '#10B981' : '#333', borderRadius:'50%'}}></span>
-                            {p.wifi_ssid ? 'WiFi Configured' : 'No WiFi'}
+                            {p.wifi_ssid ? 'WiFi Configuré' : 'Pas de WiFi'}
                           </div>
                         </div>
                         <div style={{display: 'flex', gap: '10px', marginTop: '20px'}}>
                            <a href={`/${p.id}/chat`} target="_blank" className="lux-button secondary icon-btn" style={{flex:1, justifyContent:'center', textDecoration:'none', border: '1px solid var(--color-border)'}}>
-                             Test Chat
+                             Tester Chat
                            </a>
                            <button className="lux-button icon-btn" onClick={() => generateQR(p.id)} style={{flex:1, justifyContent:'center'}}>
-                             QR Code
+                             Code QR
                            </button>
                         </div>
                       </div>
