@@ -1,6 +1,90 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import QRCode from 'qrcode';
+
+// Sub-component for the Live Demo
+function LiveDemoChat() {
+    const [history, setHistory] = useState<{role: 'user'|'assistant', text: string}[]>([
+        {role: 'assistant', text: "Hello! I am your concierge. How can I help you settle in?"}
+    ]);
+    const [isTyping, setIsTyping] = useState(false);
+    
+    // Mock Questions DB
+    const questions = [
+        { label: "WiFi Password?", prompt: "What is the WiFi password?", answer: "The network is 'Villa_Dreams_5G' and the password is 'LuxuryStay2026'. Signal is strongest in the living room." },
+        { label: "Early Check-in?", prompt: "Can I check in at 11 AM?", answer: "Standard check-in is 3 PM to ensure deep cleaning. However, I can ask the team if luggage drop-off is possible at 11 AM?" },
+        { label: "Pool Heating?", prompt: "How do I turn on the pool heat?", answer: "The pool heating is automatic and set to 28°C. If you wish to adjust it, the control panel is located in the pool house, code 1234." }
+    ];
+
+    const ask = (q: typeof questions[0]) => {
+        if (isTyping) return;
+        setHistory(prev => [...prev, {role: 'user', text: q.prompt}]);
+        setIsTyping(true);
+
+        // Simulate thinking delay
+        setTimeout(() => {
+            // Typing effect
+            const text = q.answer;
+            let i = 0;
+            setHistory(prev => [...prev, {role: 'assistant', text: ''}]);
+            
+            const interval = setInterval(() => {
+                setHistory(prev => {
+                    const newHist = [...prev];
+                    const lastMsg = newHist[newHist.length - 1];
+                    lastMsg.text = text.substring(0, i + 1);
+                    return newHist;
+                });
+                i++;
+                if (i === text.length) {
+                    clearInterval(interval);
+                    setIsTyping(false);
+                }
+            }, 30); // Typing speed
+        }, 600);
+    };
+
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+    useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [history]);
+
+    return (
+        <>
+            <div style={{flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '12px'}}>
+                {history.map((msg, i) => (
+                    <div key={i} style={{
+                        alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start',
+                        maxWidth: '85%',
+                        padding: '12px 16px',
+                        borderRadius: msg.role === 'user' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
+                        background: msg.role === 'user' ? 'var(--color-gold)' : 'rgba(255,255,255,0.05)',
+                        color: msg.role === 'user' ? '#000' : '#fff',
+                        fontSize: '0.9rem',
+                        lineHeight: '1.5',
+                        border: msg.role === 'assistant' ? '1px solid var(--color-border)' : 'none'
+                    }}>
+                        {msg.text}
+                    </div>
+                ))}
+                {isTyping && history[history.length - 1].text === '' && (
+                     <div style={{alignSelf: 'flex-start', color: '#666', fontSize:'0.8rem', marginLeft:'10px'}}>Butler is typing...</div>
+                )}
+                <div ref={messagesEndRef} />
+            </div>
+            
+            <div style={{display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom:'5px'}}>
+                {questions.map((q, i) => (
+                    <button key={i} onClick={() => ask(q)} disabled={isTyping} style={{
+                        background: 'transparent', border: '1px solid var(--color-gold)', color: 'var(--color-gold)',
+                        padding: '8px 12px', borderRadius: '100px', fontSize: '0.75rem', whiteSpace: 'nowrap',
+                        cursor: isTyping ? 'default' : 'pointer', opacity: isTyping ? 0.5 : 1, transition:'all 0.2s'
+                    }}>
+                        {q.label}
+                    </button>
+                ))}
+            </div>
+        </>
+    );
+}
 
 export default function LandingPage() {
   const [properties, setProperties] = useState<any[]>([]);
@@ -30,7 +114,6 @@ export default function LandingPage() {
     setImportedData(null);
     setProgress(10);
     
-    // Simulate steps for psychological effect
     const interval = setInterval(() => {
         setProgress(prev => {
             if (prev < 80) return prev + 10;
@@ -53,7 +136,6 @@ export default function LandingPage() {
         } else {
             setProgress(100);
             setImportedData(data);
-            // Autofill form
             setFormData({
                 name: data.property_name,
                 airbnb_link: importUrl,
@@ -80,7 +162,6 @@ export default function LandingPage() {
     });
     const newProp = await res.json();
     setProperties([...properties, newProp]);
-    // Reset
     setFormData({ name: '', airbnb_link: '', wifi_ssid: '', wifi_password: '', instructions_entree: '', secrets_maison: '' });
     setImportedData(null);
     setImportUrl('');
@@ -129,7 +210,7 @@ export default function LandingPage() {
         </nav>
 
         {/* Hero Section */}
-        <section className="container" style={{padding: '120px 20px', textAlign:'center'}}>
+        <section className="container" style={{padding: '100px 20px 60px', textAlign:'center'}}>
           <div style={{display: 'inline-block', padding: '6px 16px', background: 'rgba(215, 190, 130, 0.1)', borderRadius: '100px', color: '#D7BE82', fontSize: '0.85rem', marginBottom: '24px', fontWeight: '500'}}>
              ✨ The Future of Hospitality
           </div>
@@ -143,6 +224,35 @@ export default function LandingPage() {
             <button className="lux-button" onClick={() => setShowDashboard(true)}>Start Free Trial</button>
             <button className="lux-button secondary">View Live Demo</button>
           </div>
+        </section>
+
+        {/* Live Demo Section */}
+        <section className="container" style={{paddingBottom: '120px', display:'flex', flexDirection:'column', alignItems:'center'}}>
+           <div style={{
+               width: '100%', maxWidth: '500px', background: 'var(--color-bg-surface)', 
+               border: '1px solid var(--color-border)', borderRadius: '24px', overflow: 'hidden',
+               boxShadow: '0 20px 50px -10px rgba(0,0,0,0.5)'
+           }}>
+              {/* Fake Phone Header */}
+              <div style={{padding: '15px 20px', background: 'rgba(255,255,255,0.03)', borderBottom: '1px solid var(--color-border)', display: 'flex', alignItems: 'center', justifyContent:'space-between'}}>
+                  <div style={{display:'flex', alignItems:'center', gap:'10px'}}>
+                      <div style={{width:'30px', height:'30px', borderRadius:'50%', background:'var(--color-gold)', display:'flex', alignItems:'center', justifyContent:'center', color:'#000', fontWeight:'bold', fontSize:'0.8rem'}}>LB</div>
+                      <div>
+                          <div style={{fontSize:'0.9rem', fontWeight:'600', color:'#fff'}}>Lux Butler</div>
+                          <div style={{fontSize:'0.7rem', color:'#10B981'}}>Online</div>
+                      </div>
+                  </div>
+                  <div style={{fontSize:'0.8rem', color:'var(--color-text-muted)'}}>Live Demo</div>
+              </div>
+
+              {/* Chat Area */}
+              <div style={{height: '350px', padding: '20px', background: 'rgba(0,0,0,0.2)', display: 'flex', flexDirection: 'column', gap: '15px'}}>
+                  <LiveDemoChat />
+              </div>
+           </div>
+           <p style={{marginTop: '20px', fontSize:'0.85rem', color:'var(--color-text-muted)', fontStyle:'italic'}}>
+               * Click a question above to test the AI response speed
+           </p>
         </section>
 
         {/* Bento Box Grid */}
