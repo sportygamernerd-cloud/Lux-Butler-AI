@@ -18,6 +18,7 @@ export default function LandingPage() {
   const [importUrl, setImportUrl] = useState('');
   const [isImporting, setIsImporting] = useState(false);
   const [importedData, setImportedData] = useState<any>(null);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     fetch('/api/properties').then(res => res.json()).then(setProperties);
@@ -27,16 +28,30 @@ export default function LandingPage() {
     if (!importUrl) return;
     setIsImporting(true);
     setImportedData(null);
+    setProgress(10);
+    
+    // Simulate steps for psychological effect
+    const interval = setInterval(() => {
+        setProgress(prev => {
+            if (prev < 80) return prev + 10;
+            return prev;
+        });
+    }, 500);
+
     try {
         const res = await fetch('/api/import-airbnb', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ url: importUrl })
         });
+        clearInterval(interval);
         const data = await res.json();
+        
         if (data.error) {
             alert(data.error);
+            setProgress(0);
         } else {
+            setProgress(100);
             setImportedData(data);
             // Autofill form
             setFormData({
@@ -49,7 +64,9 @@ export default function LandingPage() {
             });
         }
     } catch(e) {
+        clearInterval(interval);
         alert("Import failed");
+        setProgress(0);
     }
     setIsImporting(false);
   };
@@ -67,6 +84,7 @@ export default function LandingPage() {
     setFormData({ name: '', airbnb_link: '', wifi_ssid: '', wifi_password: '', instructions_entree: '', secrets_maison: '' });
     setImportedData(null);
     setImportUrl('');
+    setProgress(0);
   };
 
   const generateQR = async (id: string) => {
@@ -144,6 +162,19 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
+
+        {/* Social Proof */}
+        <section style={{borderTop: '1px solid var(--color-border)', padding: '100px 0'}}>
+           <div className="container" style={{textAlign: 'center'}}>
+              <p style={{color: 'var(--color-text-muted)', fontSize: '0.9rem', marginBottom: '40px', letterSpacing: '0.1em', textTransform: 'uppercase'}}>Trusted by Top-Tier Hosts</p>
+              <div style={{display: 'flex', gap: '40px', justifyContent: 'center', opacity: 0.5, flexWrap: 'wrap'}}>
+                {/* Simulated Logos */}
+                <span style={{fontSize: '1.5rem', fontWeight: 700}}>AIRBNB<span style={{fontWeight:300}}>LUXE</span></span>
+                <span style={{fontSize: '1.5rem', fontWeight: 700}}>VILLA<span style={{fontWeight:300}}>PRO</span></span>
+                <span style={{fontSize: '1.5rem', fontWeight: 700}}>ELITE<span style={{fontWeight:300}}>STAYS</span></span>
+              </div>
+           </div>
+        </section>
       </main>
     );
   }
@@ -161,132 +192,160 @@ export default function LandingPage() {
       </nav>
 
       <div className="container" style={{marginTop: '40px', paddingBottom:'60px'}}>
-        <div style={{display: 'grid', gridTemplateColumns: '1fr', gap: '30px'}}>
-            <style jsx>{`
-               @media (min-width: 900px) {
-                 div[style*="grid"] { grid-template-columns: 400px 1fr !important; }
-               }
-            `}</style>
-          
-          {/* Add Property Form */}
-          <div className="bento-card" style={{position:'relative'}}>
-             {/* AI Import Overlay */}
-             {isImporting && (
-                 <div style={{
-                     position: 'absolute', inset: 0, background: 'rgba(10,10,10,0.8)', backdropFilter: 'blur(4px)', 
-                     zIndex: 10, borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'
-                 }}>
-                     <div style={{color: 'var(--color-gold)', fontSize: '2rem', animation: 'spin 1s linear infinite'}}>✦</div>
-                     <p style={{marginTop: '10px', color: '#fff'}}>Consulting AI Node...</p>
-                     <style jsx>{` @keyframes spin { 100% { transform: rotate(360deg); } } `}</style>
-                 </div>
-             )}
+        {/* If no properties, show HERO onboarding */}
+        {properties.length === 0 && !importedData && (
+            <div style={{textAlign: 'center', margin: '40px auto 100px', maxWidth: '700px'}}>
+                <h1 style={{fontSize: 'clamp(2.5rem, 5vw, 4rem)', lineHeight: 1.1, marginBottom: '40px'}}>
+                  Your AI Butler is <br/><span className="lux-text-gold">One Click Away.</span>
+                </h1>
+                
+                <div className="bento-card" style={{padding: '40px', textAlign: 'left', position: 'relative', overflow:'hidden'}}>
+                    
+                    {/* Progress Bar Overlay */}
+                    {(isImporting || progress > 0) && (
+                        <div style={{
+                            position: 'absolute', inset: 0, background: 'rgba(10,10,10,0.9)', backdropFilter: 'blur(10px)', 
+                            zIndex: 20, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'
+                        }}>
+                             <div style={{width: '60%', height: '4px', background: 'rgba(255,255,255,0.1)', borderRadius: '4px', overflow: 'hidden', marginBottom: '20px'}}>
+                                 <div style={{width: `${progress}%`, height: '100%', background: 'var(--color-gold)', transition: 'width 0.5s ease'}}></div>
+                             </div>
+                             <h3 style={{color: '#fff', fontSize: '1.2rem', marginBottom: '5px'}}>
+                                {progress < 30 && "Scanning listing..."}
+                                {progress >= 30 && progress < 70 && "Analysing house rules..."}
+                                {progress >= 70 && progress < 100 && "Training AI Model..."}
+                                {progress === 100 && "Concierge Ready!"}
+                             </h3>
+                             <p style={{color: 'var(--color-text-muted)'}}>{progress}% completed</p>
+                        </div>
+                    )}
 
-            <h2 style={{fontSize: '1.1rem', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '10px', justifyContent:'space-between'}}>
-              <span style={{display:'flex', alignItems:'center', gap:'10px'}}>
-                  <span style={{color: 'var(--color-gold)'}}>+</span> New Property
-              </span>
-            </h2>
-
-            {/* URL Import Input */}
-            <div style={{marginBottom: '20px', paddingBottom: '20px', borderBottom: '1px solid var(--color-border)'}}>
-                 <label style={{display: 'block', fontSize: '0.75rem', marginBottom: '8px', color: 'var(--color-gold)', letterSpacing:'0.05em', textTransform:'uppercase'}}>Import from Airbnb</label>
-                 <div style={{display: 'flex', gap: '10px'}}>
-                    <input 
-                        className="lux-input" 
-                        style={{marginBottom: 0}} 
-                        placeholder="Paste Airbnb URL here..." 
-                        value={importUrl} 
-                        onChange={e => setImportUrl(e.target.value)} 
-                    />
-                    <button 
-                        type="button" 
-                        className="lux-button" 
-                        style={{padding: '0 20px', background: importUrl ? 'var(--color-gold)' : '#333', cursor: importUrl ? 'pointer' : 'not-allowed'}}
-                        onClick={handleImport}
-                        disabled={!importUrl}
-                    >
-                        Analyze
-                    </button>
-                 </div>
+                    <label style={{display: 'block', fontSize: '0.85rem', marginBottom: '12px', color: 'var(--color-text-muted)', letterSpacing:'0.05em', textTransform:'uppercase'}}>Paste your Airbnb / Booking.com Link</label>
+                    <div style={{display: 'flex', gap: '15px', flexDirection: 'column'}}>
+                        <input 
+                            className="lux-input" 
+                            style={{
+                                fontSize: '1.1rem', padding: '20px', marginBottom: 0, 
+                                background: '#0f0f0f', border: '1px solid #333'
+                            }}
+                            placeholder="https://airbnb.com/rooms/..." 
+                            value={importUrl} 
+                            onChange={e => setImportUrl(e.target.value)} 
+                        />
+                        <button 
+                            className="lux-button" 
+                            style={{
+                                width: '100%', padding: '20px', fontSize: '1rem', 
+                                background: importUrl ? 'var(--color-gold)' : '#222', 
+                                color: importUrl ? '#000' : '#555',
+                                cursor: importUrl ? 'pointer' : 'not-allowed',
+                                transform: importUrl ? 'scale(1)' : 'scale(1)'
+                            }}
+                            onClick={handleImport}
+                            disabled={!importUrl}
+                        >
+                            Build My AI Concierge
+                        </button>
+                    </div>
+                </div>
+                <p style={{marginTop: '20px', color: '#555', fontSize: '0.9rem'}}>Used by 500+ Superhosts worldwide</p>
             </div>
+        )}
 
-            {/* Review Card (If data imported) */}
-            {importedData && (
-                <div style={{
-                    marginBottom: '20px', padding: '20px', background: 'rgba(215, 190, 130, 0.05)', 
-                    border: '1px solid var(--color-gold)', borderRadius: '12px'
-                }}>
-                    <h3 style={{fontSize: '0.9rem', color: 'var(--color-gold)', marginBottom: '10px', textTransform:'uppercase', letterSpacing:'1px'}}>Analysis Complete</h3>
-                    <div style={{fontSize: '0.85rem', color: '#ccc', display:'grid', gap:'5px'}}>
-                        <div><strong>Host:</strong> {importedData.host_name}</div>
-                        <div><strong>Rules Found:</strong> {importedData.house_rules?.length || 0}</div>
-                        <div style={{fontSize:'0.8rem', opacity:0.7, marginTop:'5px'}}>Review the fields below and save.</div>
-                    </div>
-                </div>
-            )}
-
-            <form onSubmit={handleSubmit}>
-              <div style={{marginBottom: '16px'}}>
-                <label style={{display: 'block', fontSize: '0.75rem', marginBottom: '8px', color: 'var(--color-text-muted)', letterSpacing:'0.05em', textTransform:'uppercase'}}>Property Name</label>
-                <input className="lux-input" placeholder="e.g. The Penthouse" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} required />
-              </div>
+        {/* If properties exist OR we are in editing mode after import */}
+        {(properties.length > 0 || importedData) && (
+            <div style={{display: 'grid', gridTemplateColumns: '1fr', gap: '30px'}}>
+                <style jsx>{`
+                   @media (min-width: 900px) {
+                     div[style*="grid"] { grid-template-columns: 400px 1fr !important; }
+                   }
+                `}</style>
               
-              <div style={{marginBottom: '16px'}}>
-                <label style={{display: 'block', fontSize: '0.75rem', marginBottom: '8px', color: 'var(--color-text-muted)', letterSpacing:'0.05em', textTransform:'uppercase'}}>WiFi Configuration</label>
-                <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px'}}>
-                  <input className="lux-input" placeholder="SSID" value={formData.wifi_ssid} onChange={e => setFormData({...formData, wifi_ssid: e.target.value})} />
-                  <input className="lux-input" placeholder="Password" value={formData.wifi_password} onChange={e => setFormData({...formData, wifi_password: e.target.value})} />
-                </div>
-              </div>
-
-              <div style={{marginBottom: '16px'}}>
-                <label style={{display: 'block', fontSize: '0.75rem', marginBottom: '8px', color: 'var(--color-text-muted)', letterSpacing:'0.05em', textTransform:'uppercase'}}>Access Details</label>
-                <textarea className="lux-textarea" rows={2} placeholder="Keybox code..." value={formData.instructions_entree} onChange={e => setFormData({...formData, instructions_entree: e.target.value})} />
-              </div>
-
-              <div style={{marginBottom: '24px'}}>
-                <label style={{display: 'block', fontSize: '0.75rem', marginBottom: '8px', color: 'var(--color-text-muted)', letterSpacing:'0.05em', textTransform:'uppercase'}}>House Guide</label>
-                <textarea className="lux-textarea" rows={6} placeholder="Pool heating, rules..." value={formData.secrets_maison} onChange={e => setFormData({...formData, secrets_maison: e.target.value})} />
-              </div>
-
-              <button type="submit" className="lux-button" style={{width: '100%', borderRadius: '8px'}}>Create Property</button>
-            </form>
-          </div>
-
-          {/* Properties List */}
-          <div>
-            <h2 style={{fontSize: '1.5rem', marginBottom: '24px'}}>Managed Properties</h2>
-            {properties.length === 0 ? (
-              <div style={{textAlign: 'center', padding: '80px', color: 'var(--color-text-muted)', border:'1px dashed var(--color-border)', borderRadius: '16px'}}>
-                No properties yet.
-              </div>
-            ) : (
-              <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px'}}>
-                {properties.map(p => (
-                  <div key={p.id} className="bento-card" style={{padding: '24px', display:'flex', flexDirection:'column', justifyContent:'space-between', minHeight:'180px'}}>
-                    <div>
-                      <h3 style={{fontSize: '1.2rem', marginBottom: '8px'}}>{p.name}</h3>
-                      <div style={{display:'flex', alignItems:'center', gap:'6px', fontSize:'0.85rem', color: 'var(--color-text-muted)'}}>
-                        <span style={{width:'8px', height:'8px', background: p.wifi_ssid ? '#10B981' : '#333', borderRadius:'50%'}}></span>
-                        {p.wifi_ssid ? 'WiFi Configured' : 'No WiFi'}
-                      </div>
+              {/* Add/Edit Property Form */}
+              <div className="bento-card" style={{position:'relative'}}>
+                  
+                {importedData && (
+                    <div style={{
+                        background: 'rgba(16, 185, 129, 0.1)', border: '1px solid #10B981', padding: '15px', 
+                        borderRadius: '12px', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px'
+                    }}>
+                        <span style={{fontSize: '1.2rem'}}>🎉</span>
+                        <div style={{color: '#fff', fontSize: '0.9rem'}}>
+                            <strong>AI Ready (90%)</strong><br/>
+                            We found {importedData.house_rules?.length} rules and WiFi details.
+                        </div>
                     </div>
-                    <div style={{display: 'flex', gap: '10px', marginTop: '20px'}}>
-                       <a href={`/${p.id}/chat`} target="_blank" className="lux-button secondary icon-btn" style={{flex:1, justifyContent:'center', textDecoration:'none', border: '1px solid var(--color-border)'}}>
-                         Test Chat
-                       </a>
-                       <button className="lux-button icon-btn" onClick={() => generateQR(p.id)} style={{flex:1, justifyContent:'center'}}>
-                         QR Code
-                       </button>
+                )}
+
+                <h2 style={{fontSize: '1.1rem', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '10px'}}>
+                   <span style={{color: 'var(--color-gold)'}}>{importedData ? '✦' : '+'}</span> 
+                   {importedData ? 'Review AI Knowledge Base' : 'New Property'}
+                </h2>
+
+                <form onSubmit={handleSubmit}>
+                  <div style={{marginBottom: '16px'}}>
+                    <label style={{display: 'block', fontSize: '0.75rem', marginBottom: '8px', color: 'var(--color-text-muted)', letterSpacing:'0.05em', textTransform:'uppercase'}}>Property Name</label>
+                    <input className="lux-input" placeholder="e.g. The Penthouse" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} required />
+                  </div>
+                  
+                  <div style={{marginBottom: '16px'}}>
+                    <label style={{display: 'block', fontSize: '0.75rem', marginBottom: '8px', color: 'var(--color-text-muted)', letterSpacing:'0.05em', textTransform:'uppercase'}}>WiFi Configuration</label>
+                    <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px'}}>
+                      <input className="lux-input" placeholder="SSID" value={formData.wifi_ssid} onChange={e => setFormData({...formData, wifi_ssid: e.target.value})} />
+                      <input className="lux-input" placeholder="Password" value={formData.wifi_password} onChange={e => setFormData({...formData, wifi_password: e.target.value})} />
                     </div>
                   </div>
-                ))}
-              </div>
-            )}
-          </div>
 
-        </div>
+                  <div style={{marginBottom: '16px'}}>
+                    <label style={{display: 'block', fontSize: '0.75rem', marginBottom: '8px', color: 'var(--color-text-muted)', letterSpacing:'0.05em', textTransform:'uppercase'}}>Access Details</label>
+                    <textarea className="lux-textarea" rows={2} placeholder="Keybox code..." value={formData.instructions_entree} onChange={e => setFormData({...formData, instructions_entree: e.target.value})} />
+                  </div>
+
+                  <div style={{marginBottom: '24px'}}>
+                    <label style={{display: 'block', fontSize: '0.75rem', marginBottom: '8px', color: 'var(--color-text-muted)', letterSpacing:'0.05em', textTransform:'uppercase'}}>House Guide</label>
+                    <textarea className="lux-textarea" rows={6} placeholder="Pool heating, rules..." value={formData.secrets_maison} onChange={e => setFormData({...formData, secrets_maison: e.target.value})} />
+                  </div>
+
+                  <button type="submit" className="lux-button" style={{width: '100%', borderRadius: '8px'}}>
+                      {importedData ? 'Activate Concierge' : 'Create Property'}
+                  </button>
+                </form>
+              </div>
+
+              {/* Properties List */}
+              <div>
+                <h2 style={{fontSize: '1.5rem', marginBottom: '24px'}}>Managed Properties</h2>
+                {properties.length === 0 ? (
+                  <div style={{textAlign: 'center', padding: '80px', color: 'var(--color-text-muted)', border:'1px dashed var(--color-border)', borderRadius: '16px'}}>
+                    No properties active. <br/>Save the form to activate your first butler.
+                  </div>
+                ) : (
+                  <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px'}}>
+                    {properties.map(p => (
+                      <div key={p.id} className="bento-card" style={{padding: '24px', display:'flex', flexDirection:'column', justifyContent:'space-between', minHeight:'180px'}}>
+                        <div>
+                          <h3 style={{fontSize: '1.2rem', marginBottom: '8px'}}>{p.name}</h3>
+                          <div style={{display:'flex', alignItems:'center', gap:'6px', fontSize:'0.85rem', color: 'var(--color-text-muted)'}}>
+                            <span style={{width:'8px', height:'8px', background: p.wifi_ssid ? '#10B981' : '#333', borderRadius:'50%'}}></span>
+                            {p.wifi_ssid ? 'WiFi Configured' : 'No WiFi'}
+                          </div>
+                        </div>
+                        <div style={{display: 'flex', gap: '10px', marginTop: '20px'}}>
+                           <a href={`/${p.id}/chat`} target="_blank" className="lux-button secondary icon-btn" style={{flex:1, justifyContent:'center', textDecoration:'none', border: '1px solid var(--color-border)'}}>
+                             Test Chat
+                           </a>
+                           <button className="lux-button icon-btn" onClick={() => generateQR(p.id)} style={{flex:1, justifyContent:'center'}}>
+                             QR Code
+                           </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+            </div>
+        )}
       </div>
     </main>
   );
